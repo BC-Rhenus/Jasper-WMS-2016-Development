@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-11-24T08:58:46 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nltlg01_wlg_001_orderman_001" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="c5251d6a-7399-4e3b-95bf-96d8a872a291">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 ACC"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+ship_by_date, order_reference, order_id, ship_dock, order_date, order_time, status, short, user_def_note_2, carrier_id
+from (
+select from_site_id, 
+client_id, 
+owner_id, 
+work_group, 
+consignment, 
+shipment_group, 
+order_date, 
+order_time, 
+start_by_date, 
+start_by_time, 
+ship_by_date, 
+ship_by_time, 
+deliver_by_date, 
+deliver_by_time, 
+customer_id, 
+name, 
+hub_address_id, 
+carrier_id, 
+user_def_note_2,
+order_reference,
+priority, 
+order_id, 
+order_type, 
+ship_dock, 
+work_order_type, 
+soft_allocated, 
+status, 
+count(line_id) lines, 
+SUM(tasked), 
+SUM(picked), 
+SUM(shipped), 
+SUM(short) as short
+from (select oh.from_site_id, 
+oh.client_id, 
+oh.owner_id, 
+oh.work_group, 
+oh.consignment, 
+oh.shipment_group, 
+to_char (oh.order_date, 'dd/mm/yyyy') order_date, 
+to_char (oh.order_date, 'hh24:mi:ss') order_time, 
+to_char (oh.start_by_date, 'dd/mm/yyyy') start_by_date, 
+to_char (oh.start_by_date, 'hh24:mi:ss') start_by_time, 
+to_char (oh.ship_by_date, 'dd/mm/yyyy') ship_by_date, 
+to_char (oh.ship_by_date, 'hh24:mi:ss') ship_by_time, 
+to_char (oh.deliver_by_date, 'dd/mm/yyyy') deliver_by_date, 
+to_char (oh.deliver_by_date, 'hh24:mi:ss') deliver_by_time, 
+oh.customer_id, 
+oh.name, 
+oh.hub_address_id, 
+oh.carrier_id, 
+oh.priority, 
+oh.user_def_note_2,
+oh.order_reference,
+oh.order_id, 
+oh.order_type, 
+oh.ship_dock, 
+oh.work_order_type, 
+oh.soft_allocated, 
+oh.status, 
+ol.line_id, 
+decode (ol.qty_tasked, null, 0, 0, 0, 1) tasked, 
+decode (ol.qty_picked, null, 0, 0, 0, 1) picked, 
+decode (ol.qty_shipped,null, 0, 0, 0, 1) shipped, 
+case when NVL(OL.Qty_Tasked, 0.0) = 0 then 1 else 0 end short 
+from order_header oh, order_line ol  
+where oh.order_id = ol.order_id(+)  
+and oh.client_id = ol.client_id(+)  
+and oh.status in ('Allocated', 'Awaiting', 'Cancelled', 'Complete', 'Delivered', 'Duty Error', 'Hold', 'In Progress', 'In Transit', 'Kit Started', 'Packed', 'Picked', 'Ready to Load', 'Released', 'Shipped') 
+and oh.client_id = 'WLGSL' and (oh.master_order = 'N' or oh.master_order is null) ) 
+group by from_site_id, 
+client_id, 
+owner_id, 
+work_group, 
+consignment, 
+shipment_group, 
+order_date, 
+user_def_note_2,
+order_reference,
+order_time, 
+start_by_date, 
+start_by_time, 
+ship_by_date, 
+ship_by_time, 
+deliver_by_date, 
+deliver_by_time, 
+customer_id, 
+name, 
+hub_address_id, 
+carrier_id, 
+priority, 
+order_id, 
+order_type, 
+ship_dock, 
+work_order_type, 
+soft_allocated, 
+status 
+order by from_site_id, 
+client_id, 
+owner_id, 
+work_group, 
+consignment, 
+shipment_group, 
+to_date (order_date, 'dd/mm/yyyy'), 
+to_date (order_time, 'hh24:mi:ss'), 
+to_date (start_by_date, 'dd/mm/yyyy'), 
+to_date (start_by_time, 'hh24:mi:ss'), 
+to_date (ship_by_date, 'dd/mm/yyyy'), 
+to_date (ship_by_time, 'hh24:mi:ss'), 
+to_date (deliver_by_date, 'dd/mm/yyyy'), 
+to_date (deliver_by_time, 'hh24:mi:ss'), 
+customer_id, 
+name, 
+hub_address_id, 
+carrier_id, 
+priority, 
+order_id, 
+order_type, 
+ship_dock, 
+work_order_type, 
+soft_allocated, 
+decode(status,'Hold','A','Released','B','Allocated','C','In Progress','D','Picked','E','Packed','F','Kit Started','G','Ready to Load','H','Complete','I','Awaiting','J','Duty Error','K','In Transit','L','Shipped','M','Delivered','N','Cancelled','O','Z')
+)
+order by order_reference,  ship_by_date asc]]>
+	</queryString>
+	<field name="SHIP_BY_DATE" class="java.lang.String"/>
+	<field name="ORDER_REFERENCE" class="java.lang.String"/>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="SHIP_DOCK" class="java.lang.String"/>
+	<field name="ORDER_DATE" class="java.lang.String"/>
+	<field name="ORDER_TIME" class="java.lang.String"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="SHORT" class="java.math.BigDecimal"/>
+	<field name="USER_DEF_NOTE_2" class="java.lang.String"/>
+	<field name="CARRIER_ID" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="30" uuid="387e85a2-18f1-417f-8527-b56cf3dc2ec7">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[WLG Order Management report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="82" height="30" uuid="59df4f6a-108a-4e66-9897-eb89e641a4d6"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[SHIP_BY_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="0" width="80" height="30" uuid="3baf8419-2156-432a-8c44-6cf268148924"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[ORDER_REFERENCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="0" width="80" height="30" uuid="0eebfb83-c9d6-429c-9fee-bf51d6802cab"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="242" y="0" width="80" height="30" uuid="116b99f5-40fb-4f87-bb73-e71d1d9ebceb"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[SHIP_DOCK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="322" y="0" width="80" height="30" uuid="bdb4bf13-2afe-49e9-bda3-a11fb7b56312"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[ORDER_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="0" width="80" height="30" uuid="7eccbe4e-5051-4e34-984c-61c48199ead6"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[ORDER_TIME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="482" y="0" width="80" height="30" uuid="a5727520-435c-4785-8c94-78a8f61eacfc"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="562" y="0" width="50" height="30" uuid="16eb9478-4b54-4c28-bde3-d7dd23ad6daf">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[SHORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="612" y="0" width="110" height="30" uuid="8039e59f-593b-4568-a346-5a78935c8560"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[USER_DEF_NOTE_2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="722" y="0" width="80" height="30" uuid="8219db41-2556-49d9-9c24-6268edcfc468"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[CARRIER_ID]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="82" height="30" uuid="f9a36717-2f09-4de2-804f-898633978869">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SHIP_BY_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="0" width="80" height="30" uuid="44e88875-46c2-4c5e-af52-0e41a8a5074d">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ORDER_REFERENCE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="162" y="0" width="80" height="30" uuid="c491dc10-0aee-4307-a0d2-cbb59bd25812">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="242" y="0" width="80" height="30" uuid="f4ad1442-de74-4fde-83a6-f0040a027390">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SHIP_DOCK}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="0" width="80" height="30" uuid="e4fd2293-884d-49f7-a704-d8fa322e6e85">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ORDER_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="0" width="80" height="30" uuid="899b45b4-5d0a-4e53-bfeb-24caea1dba55">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ORDER_TIME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="482" y="0" width="80" height="30" uuid="1b74ccfc-9279-4808-b439-c7f31d2cbdb1">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="562" y="0" width="50" height="30" uuid="37764a85-6217-4270-8ced-306ed26d0fd3">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SHORT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="612" y="0" width="110" height="30" uuid="3a75953f-cc61-42b1-bfc0-b7cb45d9b57b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{USER_DEF_NOTE_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="722" y="0" width="80" height="30" uuid="50ffe1ca-67a9-4dbd-8174-673f366efa74">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CARRIER_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

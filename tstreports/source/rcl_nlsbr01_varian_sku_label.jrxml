@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_nlsbr01_varian_skulb_1" pageWidth="300" pageHeight="442" whenNoDataType="NoPages" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9ba47a2b-040c-4bb8-ba76-afbef94d66f9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016ACC"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="tag_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+inv.sku_id 
+,inv.tag_id
+,inv.qty_on_hand quantity
+,inv.client_id
+,nvl(inv.user_def_chk_4,'N') customs_indicator
+,nvl(pal.host_pre_advice_id,inv.receipt_id) pre_advice_id
+,inv.line_id
+,inv.batch_id
+,inv.origin_id
+,nvl(sku.hazmat,'N') hazmat
+,sku.description
+,to_char(inv.receipt_dstamp,'DD-MM-YYYY HH24:MI:SS') receipt_date
+,(case 
+when nvl((select count(distinct srn.serial_number) nr_ser from dcsdba.serial_number srn where srn.tag_id=inv.tag_id and srn.sku_id=inv.sku_id and srn.client_id=inv.client_id),0)<>1 then null
+else (select distinct srn.serial_number ser_nr from dcsdba.serial_number srn where srn.tag_id=inv.tag_id and srn.sku_id=inv.sku_id and srn.client_id=inv.client_id) end) serial_number
+
+from dcsdba.inventory inv
+inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+left join dcsdba.pre_advice_line pal on pal.pre_advice_id=inv.receipt_id and pal.line_id=inv.line_id and pal.client_id=inv.client_id and pal.sku_id=inv.sku_id
+where inv.client_id =  'VARIAN'
+and inv.tag_id=  $P{tag_id}]]>
+	</queryString>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="TAG_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TAG_ID"/>
+	</field>
+	<field name="QUANTITY" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="QUANTITY"/>
+	</field>
+	<field name="CLIENT_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENT_ID"/>
+	</field>
+	<field name="CUSTOMS_INDICATOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CUSTOMS_INDICATOR"/>
+	</field>
+	<field name="PRE_ADVICE_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PRE_ADVICE_ID"/>
+	</field>
+	<field name="LINE_ID" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="LINE_ID"/>
+	</field>
+	<field name="BATCH_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BATCH_ID"/>
+	</field>
+	<field name="ORIGIN_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORIGIN_ID"/>
+	</field>
+	<field name="HAZMAT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="HAZMAT"/>
+	</field>
+	<field name="DESCRIPTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIPTION"/>
+	</field>
+	<field name="RECEIPT_DATE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="RECEIPT_DATE"/>
+	</field>
+	<field name="SERIAL_NUMBER" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SERIAL_NUMBER"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="442" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="120" y="50" width="140" height="20" uuid="c542ce44-72e9-4a50-b3fd-39b83393ed6b"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RECEIPT_DATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="50" width="90" height="20" uuid="598c974e-6561-463c-9a2c-516f355997ce"/>
+				<text><![CDATA[DATE / TIME]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="70" width="100" height="20" uuid="00cbafb5-53c6-4ccc-9eef-b71969bc5e77">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="70" width="90" height="20" uuid="1bf8120f-68ad-41fe-a497-dbf0e3adac36">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="90" width="100" height="20" uuid="30e7a999-1189-40cc-80f9-9e663677863a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="90" width="90" height="20" uuid="ce4816b8-2fd6-457c-8a81-f947db32018b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[QUANTITY]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="" x="120" y="110" width="100" height="20" uuid="73587f7d-8c1a-49f5-8ef0-a0577d42e0e9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BATCH_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="110" width="90" height="20" uuid="d3d386f0-2b90-4a7d-b8b2-2dbe7e6d2e14">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[BATCH_ID]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="130" width="100" height="20" uuid="8e3a839f-2b5c-487b-8c97-fdc4fe88bbf4"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUSTOMS_INDICATOR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="130" width="90" height="20" uuid="8ca4c02f-52c3-47b4-a2d8-91f7020a8224"/>
+				<text><![CDATA[BONDED]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="150" width="100" height="20" uuid="c40f9dd5-4cd4-4e51-9ea0-7f8cdc0f1312">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HAZMAT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="150" width="90" height="20" uuid="46250166-2f2b-49e9-bf58-50b41ca240d0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[HAZMAT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="170" width="80" height="20" uuid="7e81cc39-e7a4-41a9-8579-f9d8ce1ac709">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRE_ADVICE_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="170" width="90" height="20" uuid="3dca37e8-f148-4396-8427-7325122558bd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[ASN / LINE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="215" y="170" width="52" height="20" uuid="809a6647-57a6-4824-bb71-b530dd240755">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LINE_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="190" width="100" height="20" uuid="24118741-06c3-4e70-83a4-e8229ab9f9fc"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORIGIN_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="190" width="90" height="20" uuid="8d9d3b0a-3f83-43c0-be85-d0e19ffd5bea"/>
+				<text><![CDATA[ORIGIN_ID]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="220" width="147" height="20" uuid="0f4a01ac-384c-4169-97ee-9c293e8029aa"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="220" width="87" height="20" uuid="e4eaa517-f08a-40a4-8dcd-3036c9a21468"/>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="50" y="240" width="223" height="30" uuid="f78e0096-3b60-41d8-9aee-cc0a749dc4c2">
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{SKU_ID}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="120" y="310" width="168" height="20" uuid="fceefbe9-a480-4657-9ff6-a131398bba52"/>
+				<textFieldExpression><![CDATA[$F{SERIAL_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="310" width="87" height="20" uuid="d5a5c78a-eea7-43a4-92a0-cd3c1ea826a5"/>
+				<text><![CDATA[SERIAL_NUMBER]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="50" y="330" width="223" height="30" uuid="c2841f85-6a04-4264-9b96-19ebb499063e">
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{SERIAL_NUMBER}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="20" y="280" width="268" height="20" uuid="7f890256-8b03-4ced-ba82-c851eeec20e5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="30" width="100" height="20" uuid="d41274a3-4d8c-4db4-b903-f71411957d0b"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TAG_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="30" width="90" height="20" uuid="3f1d3018-8117-40f3-9b68-cbbcbf7bdea6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[TAG_ID]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

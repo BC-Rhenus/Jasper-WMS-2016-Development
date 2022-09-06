@@ -1,0 +1,33 @@
+[Tue Nov 26 06:13:26 2019] Command Invocation: billingprocdae -A SYNER -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/devdba/reports/tpb/billingprocdae_SYNER.log -L 3 -Z Europe/Amsterdam 
+[Tue Nov 26 06:13:26 2019] BC Transaction Processing daemon - Succesfully connected to server
+[Tue Nov 26 06:13:26 2019] day_of_week_specified 0
+[Tue Nov 26 06:13:26 2019] day_of_week 1
+[Tue Nov 26 06:13:26 2019] curr_day_of_week 2
+[Tue Nov 26 06:13:26 2019] current_time 22406
+[Tue Nov 26 06:13:26 2019] action_time 7200
+[Tue Nov 26 06:13:26 2019] current_date 43890
+[Tue Nov 26 06:13:26 2019] last_update 43890
+[Tue Nov 26 06:13:26 2019] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Tue Nov 26 06:13:26 2019] Process Transactions
+[Tue Nov 26 06:13:26 2019] ====================
+[Tue Nov 26 06:13:26 2019] Daemon Type         [ALL]
+[Tue Nov 26 06:13:26 2019] SLA Type            [PRICE]
+[Tue Nov 26 06:13:26 2019] Client              [SYNER]
+[Tue Nov 26 06:13:26 2019] Blanket Contract    []
+[Tue Nov 26 06:13:26 2019] Contract            []
+[Tue Nov 26 06:13:26 2019] Term                []
+[Tue Nov 26 06:13:26 2019] Invoice Group       []
+[Tue Nov 26 06:13:26 2019] Rule                []
+[Tue Nov 26 06:13:26 2019] Use Scheduling      [Y]
+[Tue Nov 26 06:13:26 2019] Include Prior       [Y]
+[Tue Nov 26 06:13:26 2019] Include Processed   [N]
+[Tue Nov 26 06:13:26 2019] Include NoRuleFound [N]
+[Tue Nov 26 06:13:26 2019] MarkNORULEFOUNDOnFly[N]
+[Tue Nov 26 06:13:26 2019] MarkNORULEFOUNDOnly [N]
+[Tue Nov 26 06:13:26 2019] Commit Size         [1000]
+[Tue Nov 26 06:13:26 2019] Email Address       [tim.grol@nl.rhenus.com]
+[Tue Nov 26 06:13:26 2019] Email Level         [1]
+[Tue Nov 26 06:13:26 2019] Time Zone           [Europe/Amsterdam]
+[Tue Nov 26 06:18:27 2019] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Tue Nov 26 06:18:27 2019] BC Transaction Processing daemon - Disconnected from server
+

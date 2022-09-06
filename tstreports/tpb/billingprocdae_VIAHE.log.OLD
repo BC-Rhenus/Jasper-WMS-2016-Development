@@ -1,0 +1,33 @@
+[Wed Dec 15 01:15:33 2021] Command Invocation: billingprocdae -A VIAHE -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/accdba/reports/tpb/billingprocdae_VIAHE.log -L 3 -Z Europe/Amsterdam 
+[Wed Dec 15 01:15:33 2021] BC Transaction Processing daemon - Succesfully connected to server
+[Wed Dec 15 01:15:33 2021] day_of_week_specified 0
+[Wed Dec 15 01:15:33 2021] day_of_week 1
+[Wed Dec 15 01:15:33 2021] curr_day_of_week 3
+[Wed Dec 15 01:15:33 2021] current_time 4533
+[Wed Dec 15 01:15:33 2021] action_time 7200
+[Wed Dec 15 01:15:33 2021] current_date 44642
+[Wed Dec 15 01:15:33 2021] last_update 44642
+[Wed Dec 15 01:15:33 2021] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Wed Dec 15 01:15:33 2021] Process Transactions
+[Wed Dec 15 01:15:33 2021] ====================
+[Wed Dec 15 01:15:33 2021] Daemon Type         [ALL]
+[Wed Dec 15 01:15:33 2021] SLA Type            [PRICE]
+[Wed Dec 15 01:15:33 2021] Client              [VIAHE]
+[Wed Dec 15 01:15:33 2021] Blanket Contract    []
+[Wed Dec 15 01:15:33 2021] Contract            []
+[Wed Dec 15 01:15:33 2021] Term                []
+[Wed Dec 15 01:15:33 2021] Invoice Group       []
+[Wed Dec 15 01:15:33 2021] Rule                []
+[Wed Dec 15 01:15:33 2021] Use Scheduling      [Y]
+[Wed Dec 15 01:15:33 2021] Include Prior       [Y]
+[Wed Dec 15 01:15:33 2021] Include Processed   [N]
+[Wed Dec 15 01:15:33 2021] Include NoRuleFound [N]
+[Wed Dec 15 01:15:33 2021] MarkNORULEFOUNDOnFly[N]
+[Wed Dec 15 01:15:33 2021] MarkNORULEFOUNDOnly [N]
+[Wed Dec 15 01:15:33 2021] Commit Size         [1000]
+[Wed Dec 15 01:15:33 2021] Email Address       [tim.grol@nl.rhenus.com]
+[Wed Dec 15 01:15:33 2021] Email Level         [1]
+[Wed Dec 15 01:15:33 2021] Time Zone           [Europe/Amsterdam]
+[Wed Dec 15 01:15:42 2021] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Wed Dec 15 01:15:42 2021] BC Transaction Processing daemon - Disconnected from server
+

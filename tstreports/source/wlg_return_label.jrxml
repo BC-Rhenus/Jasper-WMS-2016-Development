@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="wlg_return_label" pageWidth="311" pageHeight="510" columnWidth="271" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fe0dbd7d-e393-43d5-819a-96eb6246e6d2">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Style1"/>
+	<parameter name="container_id" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[ SELECT distinct 
+nvl(m.TO_CONTAINER_ID,m.CONTAINER_ID) CONTAINER_ID
+ ,              m.CLIENT_ID
+ ,              m.SITE_ID
+,               case when m.site_id = 'NLTLG01' then 'Rhenus Contract Logistics Tilburg B.V.'                      else 'Rhenus High Tech Ltd;'                                                                 end address_1
+,               case when m.site_id = 'NLTLG01' then 'Dr. Paul Janssenweg 150, 5026 RH Tilburg'               else 'Dawson Road, Bletchley, Milton Keynes, Bucks, MK1 1QY'       end address_2
+,               case when m.site_id = 'NLTLG01' then 'The Netherlands'                                                            else 'United Kingdom'                                                                         end address_3
+FROM    DCSDBA.MOVE_TASK m
+WHERE m.CLIENT_ID in ('WLG', 'WLGUK')
+AND       m.PRIORITY not in ('10', '30')  
+AND       nvl(m.TO_CONTAINER_ID, m.CONTAINER_ID) = $P{container_id}
+	 ]]>
+	</queryString>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="SITE_ID" class="java.lang.String"/>
+	<field name="address_1" class="java.lang.String"/>
+	<field name="address_2" class="java.lang.String"/>
+	<field name="address_3" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="427" splitType="Stretch">
+			<staticText>
+				<reportElement x="37" y="278" width="220" height="30" uuid="8ca0fab5-f9f1-44b9-83ba-2fe81f00deef"/>
+				<textElement>
+					<font fontName="Bookman Old Style" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Case nr:..............]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="36" y="3" width="220" height="74" uuid="294f00f5-c35f-4729-a3fe-afe2e6e2f1d2"/>
+				<textElement>
+					<font fontName="Bookman Old Style" size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RETURN ADDRESS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement key="" x="24" y="334" width="220" height="70" uuid="beedf5e0-503b-4dce-91de-c985dbb5adfe"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<BAR=wlglogo>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="38" y="78" width="220" height="60" forecolor="#000000" backcolor="#FFFFFF" uuid="c34bddb1-1e25-4d85-993a-85f05b4116c7"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="38" y="140" width="219" height="100" forecolor="#000000" backcolor="#FFFFFF" uuid="65ef200d-f7b3-4e06-b80c-4bb229b26e87"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="36" y="244" width="222" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="1617d3b2-8f30-4cec-8f2b-16d21dac31ac"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address_3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

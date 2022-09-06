@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-02-24T11:12:11 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Peli_orders_picked_complete" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3620abbf-4f6a-4cd9-9baa-a706066c8556">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<queryString language="SQL">
+		<![CDATA[with my_data as
+(
+select  distinct m.task_id  as order_id
+,       m.from_loc_id       as from_location
+,       m.pallet_id         as pallet_id
+,       m.container_id      as container_id
+from    move_task m
+where   
+client_id = 'PELI'
+and
+(       m.status = 'Consol'
+and     m.task_id not in (  select  m2.task_id
+                            from    move_task m2
+                            where   m2.task_id = m.task_id
+                            and     status <> 'Consol')
+and    (  select  count(m3.from_loc_id)
+          from    move_task m3
+          where   m3.task_id = m.task_id
+          and     from_loc_id in (select  l.location_id
+                                  from    location l  
+                                  where   work_zone not in ('STAGE','SHIPDOCK','SPECIALSTG')
+                                 )
+        ) = 0
+and     (from_loc_id like 'PELI%' or from_loc_id like 'STG%')
+) 
+or 
+(       m.task_id = (select o.order_id 
+                     from   order_header o
+                     where  o.repack = 'Y' 
+                     and    o.order_id = m.task_id
+                    )
+and     m.from_loc_id = ( select o.repack_loc_id 
+                          from   order_header o
+                          where  o.repack = 'Y' 
+                          and    o.order_id = m.task_id
+                        )
+and     m.task_id not in ( select m5.task_id
+                           from   move_task m5
+                           where  from_loc_id not in (  select  location_id
+                                                        from    location 
+                                                        where   work_zone in ('HAL3-REP','SHIPDOCK','STAGE','SPECIALSTG')
+                                                      )
+                          )
+)
+)
+select  k.from_location
+,       k.order_id
+,       k.pallet_id
+,       k.container_id
+,       'Complete' complete
+,       (select count(distinct l.pallet_id) from my_data l where l.order_id = k.order_id) as total_pallets
+from    my_data k
+order by k.from_location asc]]>
+	</queryString>
+	<field name="FROM_LOCATION" class="java.lang.String"/>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="PALLET_ID" class="java.lang.String"/>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="COMPLETE" class="java.lang.String"/>
+	<field name="TOTAL_PALLETS" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="64" splitType="Stretch">
+			<staticText>
+				<reportElement x="60" y="28" width="370" height="30" uuid="d8e54b5d-2f09-419d-80cb-6105481e8f1e"/>
+				<textElement textAlignment="Center">
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PELI Orders picked completly to stage or repack ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="20" uuid="ab0a0f99-83d9-4de1-a9e7-d5fe2453d327"/>
+				<text><![CDATA[FROM_LOCATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="105" height="20" uuid="196a2989-8774-4269-a4a2-2305ce453277"/>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="0" width="100" height="20" uuid="0612a53c-2b99-430d-be34-ae64a55ff457"/>
+				<text><![CDATA[PALLET_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="0" width="100" height="20" uuid="345395fb-f0dc-4488-a6fd-62e48d1ea904"/>
+				<text><![CDATA[CONTAINER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="0" width="119" height="20" uuid="c67ce9f2-6142-45e1-9972-49d07f2f018b"/>
+				<text><![CDATA[TOTAL_PALLETS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="3" width="136" height="17" uuid="b0f9ae3c-fc2a-4524-9b98-f8cc14498c73"/>
+				<textFieldExpression><![CDATA[$F{FROM_LOCATION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="135" y="3" width="100" height="17" uuid="731dc071-3015-4f6d-9372-5ac471b85ac1"/>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="235" y="3" width="100" height="17" uuid="471d462a-c9e2-438b-879d-bf5fe4d69343"/>
+				<textFieldExpression><![CDATA[$F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="335" y="3" width="100" height="17" uuid="1ed274b5-fefb-4cdf-bb7f-de332d9b972b"/>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="3" width="120" height="17" uuid="0241a4c4-31d3-4056-b9a8-62b1deb13cbc"/>
+				<textFieldExpression><![CDATA[$F{TOTAL_PALLETS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

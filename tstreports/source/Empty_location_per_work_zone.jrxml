@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-04-11T11:28:24 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Empty_location_per_work_zone" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5714ace-74ad-4c61-8f35-cc1128463c1f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<parameter name="work_zone" class="java.lang.String"/>
+	<parameter name="site_id" class="java.lang.String"/>
+	<parameter name="lock_status" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select    		l.location_id			as location_id
+,         			l.zone_1					as zone_1
+,					null							as	 sku_id
+,					null							as comments
+from       	location l
+where    	l.work_zone       		= $P{work_zone}
+and       		l.site_id         			= $P{site_id}
+and       		l.lock_status     		= $P{lock_status}
+and       		l.alloc_volume    		= 0
+and       		l.current_volume  	= 0
+order by 	l.location_id
+,         			l.zone_1
+]]>
+	</queryString>
+	<field name="LOCATION_ID" class="java.lang.String"/>
+	<field name="ZONE_1" class="java.lang.String"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="COMMENTS" class="java.lang.String"/>
+	<title>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="554" height="30" uuid="c1a63354-7476-4cda-b91b-ecab95d8ec08"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Empty locations.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="18" uuid="25dd8121-7134-4650-b1f6-8fb50880eef9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[LOCATION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="180" height="18" uuid="64d17ca3-a1b3-44f9-9f7d-3416f38bd357"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="274" height="18" uuid="056dc614-09e1-4868-be9a-dcfc8d116d79"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[COMMENTS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="18" uuid="aa734c0e-fad9-4f69-b7b9-3d94fbb46c82"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCATION_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="180" height="18" uuid="b435ede4-3b66-44c2-bd44-d5969316a932"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="280" y="0" width="274" height="18" uuid="b46f9ef6-1cf4-4140-859d-3544e7139bb6"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMMENTS}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-5" y="16" width="568" height="1" uuid="f59edab2-46f3-47f8-b7b6-424c9f017041"/>
+			</line>
+			<line>
+				<reportElement x="95" y="-10" width="1" height="26" uuid="3acab90c-780b-4e21-997a-9b3bacfd1c77"/>
+			</line>
+			<line>
+				<reportElement x="275" y="-11" width="1" height="26" uuid="fb0cd7e0-eab7-46f8-a51f-0f418fd96a58"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

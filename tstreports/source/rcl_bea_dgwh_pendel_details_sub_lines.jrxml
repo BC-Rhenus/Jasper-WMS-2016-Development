@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-12-22T08:00:34 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_bea_dgwh_pendel_details_sub_lines" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.6500000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_PRD"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\tim.grol\\Desktop\\ireport\\MyReports"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select odl.order_id,odl.sku_id,sum(odl.qty_ordered) qty_ordered
+,to_char(odh.ship_by_date,'DD-MON-YYYY') ship_by_date,sku.family_group
+,(case when pck.track_level_5='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4*pck.ratio_4_to_5)
+when pck.track_level_4='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4)
+when pck.track_level_3='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3)
+when pck.track_level_2='PALLET' then (pck.ratio_1_to_2)
+when pck.track_level_1='PALLET' then 1
+else null end) plt_qty
+,(case when pck.track_level_5 in ('BOX','IBX','CET') then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4*pck.ratio_4_to_5)
+when pck.track_level_4 in ('BOX','IBX','CET') then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4)
+when pck.track_level_3 in ('BOX','IBX','CET') then (pck.ratio_1_to_2*pck.ratio_2_to_3)
+when pck.track_level_2 in ('BOX','IBX','CET') then (pck.ratio_1_to_2)
+when pck.track_level_1 in ('BOX','IBX','CET') then 1
+else null end) box_qty
+,pck.each_per_layer
+,nvl(sku.ship_shelf_life,90) sku_shelf_life
+from dcsdba.order_header odh
+inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id
+inner join dcsdba.sku sku on odl.sku_id=sku.sku_id and odl.client_id=sku.client_id
+inner join (select lnk.sku_id,lnk.config_id,lnk.client_id,lnk.main_config_id,row_number() over (partition by lnk.sku_id,lnk.client_id order by nvl(lnk.main_config_id,'N') desc,lnk.dstamp desc) rnk
+    from dcsdba.sku_sku_config lnk 
+    where nvl(lnk.disabled,'N')='N') rec
+on sku.sku_id=rec.sku_id and sku.client_id=rec.client_id and rec.rnk=1
+inner join dcsdba.sku_config pck on rec.config_id=pck.config_id and rec.client_id=pck.client_id
+where odh.client_id='BEA'
+and odh.status in ('Hold','Released')
+and nvl(sku.hazmat,'N')='Y'
+and odl.batch_id is null
+and odl.shelf_life_days is null
+group by odl.order_id,odl.sku_id,odh.ship_by_date,sku.family_group,pck.track_level_1,pck.track_level_2,pck.track_level_3,pck.track_level_4,pck.track_level_5,pck.ratio_1_to_2,pck.ratio_2_to_3,pck.ratio_3_to_4,pck.ratio_4_to_5,pck.each_per_layer,sku.ship_shelf_life
+order by 2]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="QTY_ORDERED" class="java.math.BigDecimal"/>
+	<field name="SHIP_BY_DATE" class="java.lang.String"/>
+	<field name="FAMILY_GROUP" class="java.lang.String"/>
+	<field name="PLT_QTY" class="java.math.BigDecimal"/>
+	<field name="BOX_QTY" class="java.math.BigDecimal"/>
+	<field name="EACH_PER_LAYER" class="java.math.BigDecimal"/>
+	<field name="SKU_SHELF_LIFE" class="java.math.BigDecimal"/>
+	<columnHeader>
+		<band height="10" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="1" y="0" width="88" height="10" uuid="b0895ba8-38df-4dc8-adb3-ef8858260501">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order-ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="0" width="60" height="10" uuid="0fd266cc-dc23-4fb5-942c-c5a2e945e960">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sku-ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="149" y="0" width="58" height="10" uuid="a27e5624-d8dc-47ce-ab4c-867f8303c237">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTY Ordered]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="207" y="0" width="60" height="10" uuid="e660e56a-58e3-4834-8f90-88c53e693d1f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ship-By-Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="267" y="0" width="60" height="10" uuid="1933680e-f81a-4361-b313-fd514d3b8165">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FamilyGroup]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="0" width="50" height="10" uuid="9f739490-c8c2-497b-9366-07296f2c7ff0">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLT QTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="0" width="50" height="10" uuid="0f2b1592-685b-4b26-b593-0ea3e3ce5704">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BOX QTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="427" y="0" width="60" height="10" uuid="f3fed196-c1e3-4680-b9f4-e1ea6ef8473c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Each per Layer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="487" y="0" width="60" height="10" uuid="a46444e8-fd58-4477-aeaf-dc217361ccbb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sku Shelf Life]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+		<band height="10">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1" y="0" width="88" height="10" uuid="af622d12-2e72-4828-8c49-ea425bf86e73">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="89" y="0" width="60" height="10" uuid="7ba2f413-14b1-4e6a-b834-2032f2788979">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="149" y="0" width="58" height="10" uuid="94c8a0e9-a5cc-48ed-b96d-9675d263584e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_ORDERED}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="207" y="0" width="60" height="10" uuid="b7d2b0e6-02c7-4173-913f-91587d01ce4f">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHIP_BY_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="267" y="0" width="60" height="10" uuid="da88fe46-7296-4d03-81b6-97ec8ebbf435">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FAMILY_GROUP}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="327" y="0" width="50" height="10" uuid="7bc97d2a-61b1-4e42-b00a-4d5f819ea8bc">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PLT_QTY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="377" y="0" width="50" height="10" uuid="47e338df-def9-4213-91e5-ffadab19f156">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BOX_QTY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="427" y="0" width="60" height="10" uuid="01b9c56a-c451-4923-adcc-18b5e5d7ae5b">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EACH_PER_LAYER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="487" y="0" width="60" height="10" uuid="ee2215c3-4c8c-4aaa-8613-0f9e69811603">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_SHELF_LIFE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+</jasperReport>

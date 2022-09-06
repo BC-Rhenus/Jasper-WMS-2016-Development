@@ -1,0 +1,33 @@
+[Mon Mar  1 00:46:49 2021] Command Invocation: billingprocdae -A MASMK -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/prddba/reports/tpb/billingprocdae_MASMK.log -L 3 -Z Europe/Amsterdam 
+[Mon Mar  1 00:46:49 2021] BC Transaction Processing daemon - Succesfully connected to server
+[Mon Mar  1 00:46:49 2021] day_of_week_specified 0
+[Mon Mar  1 00:46:49 2021] day_of_week 1
+[Mon Mar  1 00:46:49 2021] curr_day_of_week 1
+[Mon Mar  1 00:46:49 2021] current_time 2809
+[Mon Mar  1 00:46:49 2021] action_time 7200
+[Mon Mar  1 00:46:49 2021] current_date 44349
+[Mon Mar  1 00:46:49 2021] last_update 44349
+[Mon Mar  1 00:46:49 2021] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Mon Mar  1 00:46:49 2021] Process Transactions
+[Mon Mar  1 00:46:49 2021] ====================
+[Mon Mar  1 00:46:49 2021] Daemon Type         [ALL]
+[Mon Mar  1 00:46:49 2021] SLA Type            [PRICE]
+[Mon Mar  1 00:46:49 2021] Client              [MASMK]
+[Mon Mar  1 00:46:49 2021] Blanket Contract    []
+[Mon Mar  1 00:46:49 2021] Contract            []
+[Mon Mar  1 00:46:49 2021] Term                []
+[Mon Mar  1 00:46:49 2021] Invoice Group       []
+[Mon Mar  1 00:46:49 2021] Rule                []
+[Mon Mar  1 00:46:49 2021] Use Scheduling      [Y]
+[Mon Mar  1 00:46:49 2021] Include Prior       [Y]
+[Mon Mar  1 00:46:49 2021] Include Processed   [N]
+[Mon Mar  1 00:46:49 2021] Include NoRuleFound [N]
+[Mon Mar  1 00:46:49 2021] MarkNORULEFOUNDOnFly[N]
+[Mon Mar  1 00:46:49 2021] MarkNORULEFOUNDOnly [N]
+[Mon Mar  1 00:46:49 2021] Commit Size         [1000]
+[Mon Mar  1 00:46:49 2021] Email Address       [tim.grol@nl.rhenus.com]
+[Mon Mar  1 00:46:49 2021] Email Level         [1]
+[Mon Mar  1 00:46:49 2021] Time Zone           [Europe/Amsterdam]
+[Mon Mar  1 00:46:49 2021] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Mon Mar  1 00:46:49 2021] BC Transaction Processing daemon - Disconnected from server
+

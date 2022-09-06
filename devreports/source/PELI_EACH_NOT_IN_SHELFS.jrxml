@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-02-21T11:09:32 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PELI_EACH_NOT_IN_SHELFS" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0b18a072-62cc-4623-bb91-1cc7794490d7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 ACC"/>
+	<queryString language="SQL">
+		<![CDATA[select  i.sku_id                                    as SKU
+,		i.tag_id										as TAG
+,       i.location_id                               as LOCATIONS
+,       i.zone_1                                    as ZONES
+,       i.lock_code                                 as LOCKS
+,       to_char(i.MOVE_DSTAMP,'YYYY-MM-DD')         as INV_DATE
+,       i.qty_on_hand                               as QTY
+,       s.ratio_1_to_2                              as BOX_QTY
+from    inventory i, sku_config s
+where   i.config_id = s.config_id
+and     i.client_id = 'PELI'
+and     i.qty_on_hand/s.ratio_1_to_2-floor(i.qty_on_hand/s.ratio_1_to_2) != 0
+and     i.zone_1 in ('HAL3-PFEUL','HAL-PFEUH','HAL3-PFBLL','HAL3-PFBLH','HAL3-OVE','HAL3-HB')
+order by location_id]]>
+	</queryString>
+	<field name="SKU" class="java.lang.String"/>
+	<field name="LOCATIONS" class="java.lang.String"/>
+	<field name="ZONES" class="java.lang.String"/>
+	<field name="LOCKS" class="java.lang.String"/>
+	<field name="INV_DATE" class="java.lang.String"/>
+	<field name="QTY" class="java.math.BigDecimal"/>
+	<field name="BOX_QTY" class="java.math.BigDecimal"/>
+	<field name="TAG" class="java.lang.String"/>
+	<title>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="0" width="790" height="30" uuid="f2d21ad6-2777-41dd-9d2f-f527a44e21d7"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PELI report EACHES not in SHELF LOCATIONS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="120" height="20" uuid="90e3b5d9-102f-4807-97c8-875c03693ce3"/>
+				<text><![CDATA[SKU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" uuid="1737b9a8-52c3-4ba7-93d4-31d180a70034"/>
+				<text><![CDATA[LOCATIONS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="20" uuid="c664392d-df15-4857-8c54-9d5af852b053"/>
+				<text><![CDATA[ZONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="100" height="20" uuid="11726225-8690-4c9c-991e-9c820a5cb4e2"/>
+				<text><![CDATA[LOCKS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="80" height="20" uuid="8b08affd-a742-40c4-ba36-9dac4aca8786"/>
+				<text><![CDATA[TAG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="100" height="20" uuid="9c9879cf-1087-445d-9815-ccdaa86f4cfd"/>
+				<text><![CDATA[QTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="0" width="100" height="20" uuid="5212a2f0-19b2-43c1-afa1-d6869a104360"/>
+				<text><![CDATA[INV_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="700" y="0" width="100" height="20" uuid="49dbc312-7121-4ca7-83cf-7995f9b8ed8d"/>
+				<text><![CDATA[BOX_QTY]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="121" height="20" uuid="1529552a-4419-42a4-979a-d43a571601c7"/>
+				<textFieldExpression><![CDATA[$F{SKU}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="495b6130-1d83-4cdf-9b65-cebf3f94b1cd"/>
+				<textFieldExpression><![CDATA[$F{LOCATIONS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20" uuid="6083db77-4dbe-43e6-b7aa-5e1aa717df94"/>
+				<textFieldExpression><![CDATA[$F{ZONES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="100" height="20" uuid="3ed6695e-0a27-4e5b-bab7-8ee5dbcd2b14"/>
+				<textFieldExpression><![CDATA[$F{LOCKS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="80" height="20" uuid="1f6d7370-e0e8-4d0f-814c-1cc276bd6d49"/>
+				<textFieldExpression><![CDATA[$F{TAG}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="0" width="100" height="20" uuid="1a65398c-81f6-4ac5-a472-cfe5c26b67da"/>
+				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="100" height="20" uuid="810e81dc-7c49-4fef-985e-e11327108d44"/>
+				<textFieldExpression><![CDATA[$F{INV_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="700" y="0" width="100" height="20" uuid="a618a613-1119-40bc-97bd-67f2100c97bf"/>
+				<textFieldExpression><![CDATA[$F{BOX_QTY}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-11-24T09:07:06 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nltlg01_wlg_001_container_001" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="135ec4b1-508f-449b-ba7a-5ed3164f421b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 ACC"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT client_id, order_id, container_id
+FROM order_container
+WHERE order_id IN (
+	SELECT order_id
+	FROM order_container
+	WHERE client_id = 'WLG'
+	GROUP BY order_id
+	HAVING count(order_id) > 1
+)]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="300" height="30" uuid="2d8033a7-909b-431d-9c93-a51a559e5fca">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[WLG Container Check]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="0e28314f-2291-4169-9845-351a44750fed">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" uuid="ca3e303d-16eb-4401-967a-0130cf5de149">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CONTAINER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" uuid="9ea41b81-2947-4ed8-b927-2b38ce2aff24">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="73f540a4-0916-4b06-afe1-7262946fa103">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="2c0ef840-b629-4620-aa56-72b12be2411f">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="647009fd-8f27-4974-87f7-a04b521cb575">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

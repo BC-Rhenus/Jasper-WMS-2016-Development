@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Content Label" pageWidth="304" pageHeight="488" columnWidth="304" leftMargin="0" rightMargin="0" topMargin="25" bottomMargin="2" uuid="78ff7781-5599-48c0-8752-534459d756fd">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="200"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="b73d339b-76d4-4293-93b6-d025d82a6684">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TST2016DCSDBA"/>
+		<parameter name="container_id_2" class="java.lang.String"/>
+		<parameter name="client_id_2" class="java.lang.String"/>
+		<parameter name="order_id_2" class="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[select order_id, sku_id, sum(qty_to_move) from 
+	(select 
+		 (select nvl(nvl(oh.inv_reference, oh.order_reference), oh.order_id) from order_header oh where oh.order_id=mt.task_id and oh.client_id=mt.client_id) as order_id 
+		, mt.sku_id, mt.qty_to_move 
+from move_task mt
+where mt.container_id=$P{container_id_2}
+and mt.task_id=$P{order_id_2}
+and mt.client_id=$P{client_id_2})
+group by order_id , sku_id]]>
+		</queryString>
+		<field name="ORDER_ID" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="ORDER_ID"/>
+		</field>
+		<field name="SKU_ID" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+		</field>
+		<field name="SUM(QTY_TO_MOVE)" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="SUM(QTY_TO_MOVE)"/>
+		</field>
+		<group name="ORDER_ID">
+			<groupExpression><![CDATA[$F{ORDER_ID}]]></groupExpression>
+		</group>
+		<group name="SKU_ID">
+			<groupExpression><![CDATA[$F{SKU_ID}]]></groupExpression>
+		</group>
+		<group name="SUM(QTY_TO_MOVE)">
+			<groupExpression><![CDATA[$F{SUM(QTY_TO_MOVE)}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="container_id" class="java.lang.String"/>
+	<parameter name="order_id" class="java.lang.String"/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<parameter name="owner_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select		pallet_id
+			, 	container_id
+			, 	country
+			,	ship_dock
+			,	client_id
+			,	order_reference
+			,	order_id
+			,	sku_id
+			,	qty_to_move
+			,	dg
+			,	count(dg)
+from	(select		o.order_id
+							, 	o.order_reference
+							,	o.country
+							,	o.ship_dock
+							,	m.sku_id
+							,	sum(m.qty_to_move) qty_to_move
+							,	m.client_id
+							,	decode(m.to_container_id,null,m.container_id,m.to_container_id) container_id
+							,	m.pallet_id
+							,	h.user_def_type_1 DG
+        	from    dcsdba.move_task m
+    		inner
+			join	dcsdba.order_header o
+    			on	m.task_id	=	o.order_id
+    			and	m.client_id	=	o.client_id
+			inner 
+			join	dcsdba.sku s
+				on	s.sku_id		=	m.sku_id
+				and	s.client_id	=	m.client_id
+	        left
+	        join	dcsdba.hazmat h
+		        on	h.hazmat_id	=	s.hazmat_id
+		        where m.task_id != 'PALLET'
+		        and 		( 
+		        				nvl(m.to_container_id, m.container_id) =  $P{container_id}
+                    			or  nvl(m.to_pallet_id, m.pallet_id) =  $P{container_id}
+                    		)
+		        and 		m.client_id  = $P{client_id}
+	        group 
+	        by	m.pallet_id
+				,	decode(m.to_container_id,null,m.container_id,m.to_container_id)
+				,	o.order_id 
+				,	m.sku_id
+				,	o.order_reference
+				,	m.client_id
+				,	o.country
+				,	o.ship_dock
+				,	h.user_def_type_1
+   			)
+group
+by	pallet_id
+	,	container_id
+	,	country
+	,	ship_dock
+	,	client_id
+	,	order_reference
+	,	order_id
+	,	sku_id
+	,   qty_to_move
+	,	dg
+order 
+by	container_id
+	,	order_id
+	,	sku_id]]>
+	</queryString>
+	<field name="PALLET_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PALLET_ID"/>
+	</field>
+	<field name="CONTAINER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONTAINER_ID"/>
+	</field>
+	<field name="COUNTRY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COUNTRY"/>
+	</field>
+	<field name="SHIP_DOCK" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SHIP_DOCK"/>
+	</field>
+	<field name="CLIENT_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENT_ID"/>
+	</field>
+	<field name="ORDER_REFERENCE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORDER_REFERENCE"/>
+	</field>
+	<field name="ORDER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORDER_ID"/>
+	</field>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="QTY_TO_MOVE" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="QTY_TO_MOVE"/>
+	</field>
+	<field name="DG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DG"/>
+	</field>
+	<field name="COUNT(DG)" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="COUNT(DG)"/>
+	</field>
+	<variable name="TotalDGCount" class="java.lang.Integer" resetType="Group" resetGroup="Container_id" calculation="Sum">
+		<variableExpression><![CDATA[$F{COUNT(DG)}]]></variableExpression>
+	</variable>
+	<group name="Container_id" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{CONTAINER_ID}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="131">
+			<staticText>
+				<reportElement x="12" y="61" width="190" height="10" uuid="093e526a-8795-47cf-aafc-f48b94b32e32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[SHIP DOCK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="101" width="70" height="10" uuid="cc70661c-d7f2-4cf9-8ddc-1b1fae7272b8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[CLIENT ID]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="202" y="111" width="70" height="20" uuid="5164cb38-da02-4248-993d-98bf5f096066">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="12" y="71" width="190" height="30" uuid="b772cb04-8f65-40d0-8366-188c412c50b1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHIP_DOCK}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="71" width="70" height="30" uuid="573664f6-d7c0-4171-87ee-2e83d98b02a1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="202" y="61" width="70" height="10" uuid="0937cea7-4705-4c9d-9b5b-3f7967c1fca9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[COUNTRY CODE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="107" y="111" width="95" height="20" uuid="87297213-9b70-410f-a151-d1cbb41fdf36">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_REFERENCE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="107" y="101" width="95" height="10" uuid="09d487f3-dda1-4518-9fe7-abed2a9338f0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[ORDER REF.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="101" width="95" height="10" uuid="16a70065-457a-4967-83a7-3af3fe2a7d5e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[ORDER NO.]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="12" y="111" width="95" height="20" uuid="8f6eac86-82e7-4132-8378-d5812ff67448">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="12" y="20" width="201" height="36" uuid="ceb97120-23d2-42f4-a1a3-c1e006473d17"/>
+				<textElement textAlignment="Left" rotation="None"/>
+				<textFieldExpression><![CDATA["<BAR=code128>" + $F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="4" width="201" height="15" uuid="4464e54f-adde-4d4a-afe8-ca22a45c4c3d"/>
+				<textElement textAlignment="Left" rotation="None"/>
+				<textFieldExpression><![CDATA["CONTAINER ID:" + " " + $F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="Container_id">
+				<reportElement x="213" y="20" width="59" height="36" uuid="0f56753e-7eac-4496-a8b9-98a4ab4317e6"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="0.1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalDGCount}.equals(0)?"":"^GFA,"+"5404,5404,28,FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFF9FFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFF9FFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFE07FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFC03FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFC03FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFF801FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFF801FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFF000FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFF000FFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFE0007FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFC0003FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFC0003FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFF80001FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFF80001FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFF00000FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFF00000FFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFE000007FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFC000003FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFC000003FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFF8000001FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFF8000001FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFF0000000FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFF0000000FFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFE00000007FFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFC00000003FFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFC00000003FFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFF800000001FFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFF8003FC001FFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFF000FFF000FFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFE001FFF8007FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFE003FFFC007FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFC007FFFE003FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFC007FFFE003FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFF800FFFFF001FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFF800FFFFF001FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFF000FFFFF000FFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFE001FFFFF0007FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFE001FFFFF8007FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFC001FFFFF8003FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFC001FFFFF8003FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFF8001FFFFF8001FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFF8001FFFFF0001FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFF0001FFFFF0000FFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFE0000FFFFF00007FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFE0000FFFFF00007FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFC0000FFFFF00003FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFC0000FFFFF00003FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFF80000FFFFF00001FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFF80000FFFFF00001FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFF00000FFFFF00000FFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFE00000FFFFF000007FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFE00000FFFFF000007FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFC00000FFFFF000003FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFC00000FFFFF000003FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFF800000FFFFF000001FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFF000000FFFFF000001FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFF000000FFFFF000000FFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFE000000FFFFF0000007FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFE0000007FFFE0000007FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFC0000007FFFE0000003FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFC0000007FFFE0000003FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFF80000007FFFE0000001FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFF00000007FFFE0000000FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFF00000007FFFE0000000FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFE00000007FFFE00000007FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFE00000007FFFE00000007FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFC00000007FFFE00000003FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFC00000007FFFE00000003FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFF800000007FFFE00000001FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFF000000007FFFE00000000FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFF000000007FFFE00000000FFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFE000000007FFFC000000007FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFE000000003FFFC000000007FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFC000000003FFFC000000003FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFC000000003FFFC000000003FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFF8000000003FFFC000000001FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFF0000000003FFFC000000000FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFF0000000003FFFC000000000FFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFE0000000003FFFC0000000007FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFE0000000003FFFC0000000007FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFC0000000003FFFC0000000003FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFF80000000003FFFC0000000003FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFF80000000003FFFC0000000001FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFF00000000003FFFC0000000000FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFF00000000001FFF80000000000FFFFFFFFFFFFFFF0FFFFFFFFFFFFFFE00000000001FFF800000000007FFFFFFFFFFFFFF0FFFFFFFFFFFFFFE00000000001FFF800000000007FFFFFFFFFFFFFF0FFFFFFFFFFFFFFC00000000001FFF800000000003FFFFFFFFFFFFFF0FFFFFFFFFFFFFF800000000001FFF800000000001FFFFFFFFFFFFFF0FFFFFFFFFFFFFF800000000000FFF000000000001FFFFFFFFFFFFFF0FFFFFFFFFFFFFF000000000000FFF000000000000FFFFFFFFFFFFFF0FFFFFFFFFFFFFF000000000000FFF000000000000FFFFFFFFFFFFFF0FFFFFFFFFFFFFE0000000000007FE0000000000007FFFFFFFFFFFFF0FFFFFFFFFFFFFE0000000000003FC0000000000007FFFFFFFFFFFFF0FFFFFFFFFFFFFC0000000000000000000000000003FFFFFFFFFFFFF0FFFFFFFFFFFFF80000000000000000000000000001FFFFFFFFFFFFF0FFFFFFFFFFFFF80000000000000000000000000001FFFFFFFFFFFFF0FFFFFFFFFFFFF00000000000000000000000000000FFFFFFFFFFFFF0FFFFFFFFFFFFF00000000000000000000000000000FFFFFFFFFFFFF0FFFFFFFFFFFFE000000000000000000000000000007FFFFFFFFFFFF0FFFFFFFFFFFFE000000000000000000000000000007FFFFFFFFFFFF0FFFFFFFFFFFFC000000000000000000000000000003FFFFFFFFFFFF0FFFFFFFFFFFF8000000000000006000000000000001FFFFFFFFFFFF0FFFFFFFFFFFF800000000000007FE00000000000001FFFFFFFFFFFF0FFFFFFFFFFFF00000000000000FFF00000000000000FFFFFFFFFFFF0FFFFFFFFFFFF00000000000003FFFC0000000000000FFFFFFFFFFFF0FFFFFFFFFFFE00000000000003FFFC00000000000007FFFFFFFFFFF0FFFFFFFFFFFE00000000000007FFFE00000000000007FFFFFFFFFFF0FFFFFFFFFFFC0000000000000FFFFF00000000000003FFFFFFFFFFF0FFFFFFFFFFF80000000000000FFFFF00000000000001FFFFFFFFFFF0FFFFFFFFFFF80000000000000FFFFF00000000000001FFFFFFFFFFF0FFFFFFFFFFF00000000000001FFFFF80000000000000FFFFFFFFFFF0FFFFFFFFFFF00000000000001FFFFF80000000000000FFFFFFFFFFF0FFFFFFFFFFE00000000000001FFFFF800000000000007FFFFFFFFFF0FFFFFFFFFFC00000000000001FFFFF800000000000007FFFFFFFFFF0FFFFFFFFFFC00000000000001FFFFF000000000000003FFFFFFFFFF0FFFFFFFFFF800000000000000FFFFF000000000000001FFFFFFFFFF0FFFFFFFFFF800000000000000FFFFF000000000000001FFFFFFFFFF0FFFFFFFFFF0000000000000007FFFE000000000000000FFFFFFFFFF0FFFFFFFFFF0000000000000007FFFE000000000000000FFFFFFFFFF0FFFFFFFFFE0000000000000003FFFC0000000000000007FFFFFFFFF0FFFFFFFFFC0000000000000001FFF80000000000000003FFFFFFFFF0FFFFFFFFFC00000000000000007FE00000000000000003FFFFFFFFF0FFFFFFFFF800000000000000001F800000000000000001FFFFFFFFF0FFFFFFFFF8000000000000000000000000000000000001FFFFFFFFF0FFFFFFFFF0000000000000000000000000000000000000FFFFFFFFF0FFFFFFFFF0000000000000000000000000000000000000FFFFFFFFF0FFFFFFFFE00000000000000000000000000000000000007FFFFFFFF0FFFFFFFFC00000000000000000000000000000000000003FFFFFFFF0FFFFFFFFC00000000000000000000000000000000000003FFFFFFFF0FFFFFFFF800000000000000000000000000000000000001FFFFFFFF0FFFFFFFF800000000000000000000000000000000000001FFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0^FS"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<staticText>
+				<reportElement x="174" y="0" width="58" height="22" uuid="89fd2ae7-32fe-49b8-9213-a5747d2dc991">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c246928-ef93-4532-84f6-6d60f21b26e4"/>
+				</reportElement>
+				<text><![CDATA[HAZMAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="0" width="162" height="22" uuid="9980bf2c-83eb-4040-9e8a-12d246c5b0e9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c4523fb-36ef-4182-862d-dc6781c67608"/>
+				</reportElement>
+				<text><![CDATA[SKU ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="232" y="0" width="39" height="22" uuid="185811c7-951f-45cf-be5d-a8c49e721b43">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32141a20-a633-4b21-bbf3-e68c0154c3eb"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[QTY]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+				<reportElement x="174" y="0" width="58" height="20" uuid="b29886da-75ea-4920-b41c-15a0fa7f5a0e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c246928-ef93-4532-84f6-6d60f21b26e4"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{DG}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="12" y="0" width="162" height="20" uuid="e5817eaf-b8a7-4093-8b8a-0da0d90d9e33">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c4523fb-36ef-4182-862d-dc6781c67608"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="232" y="0" width="39" height="20" uuid="861af69e-2f3b-4148-aeab-82354b2b8aa5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32141a20-a633-4b21-bbf3-e68c0154c3eb"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{QTY_TO_MOVE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="115">
+			<textField textAdjust="ScaleFont">
+				<reportElement x="12" y="21" width="260" height="36" uuid="7f58b50e-6f3e-43ae-bdcd-46c4a883e4f5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" rotation="None"/>
+				<textFieldExpression><![CDATA["<BAR=code128>" + $F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="5" width="260" height="15" uuid="316c50a2-946b-41b2-922a-8f4d821b8f8e"/>
+				<textElement textAlignment="Left" rotation="None"/>
+				<textFieldExpression><![CDATA["PALLET ID:" + " " + $F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

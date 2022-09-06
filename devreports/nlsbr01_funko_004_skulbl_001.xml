@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<label>
+
+	<!-- settings for the zebra print exporter -->
+	<zebra>
+		<!-- Dots per inch set in the zebra printer -->
+		<dpi>203</dpi>
+
+
+		<!-- The command used to start the label. The
+		     co-ordinates of the label origin can be set -->
+		<label_start>^LH0,0</label_start>
+
+		<barcode>
+			<name>code128</name>
+			<zebra_code>^BY3^BCN,100,N</zebra_code>
+		</barcode>
+
+
+	</zebra>
+
+	<!-- settings for the plain text print exporter -->
+	<text>
+		<!-- Number of rows on a page. If zero this will be estimated
+		     by the jrtskdae based on the report font size and the
+		     report height. For correct output this should be set-->
+		<rows>66</rows>
+
+		<!-- Number of columns on a page (e.g number of chars on a row).
+		     If zero this will be estimated by the jrtskdae based
+		     on the report font size and the report height. For correct
+		     output this should be set-->
+		<columns>999</columns>
+
+		<!-- String to be output after each line. Note that this only
+		     supports the following control characters \n \r \f \t \b.
+		     If nothing is specified the default operating system line
+		     separator will be used -->
+		<linebreak>\n\r</linebreak>
+
+		<!-- String to be output after each page. Note that this only
+		     supports the following control characters \n \r \f \t \b.
+		     If nothing is specified the default operating system line
+		     separator will be used twice -->
+		<pagebreak>\f</pagebreak>
+	</text>
+</label>
+

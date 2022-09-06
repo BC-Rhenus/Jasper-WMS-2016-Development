@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2022-08-22T10:31:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_nlsbr01_varian_skulb_1" pageWidth="300" pageHeight="442" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9ba47a2b-040c-4bb8-ba76-afbef94d66f9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016ACC"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="tag_id" class="java.lang.String"/>
+	<parameter name="site_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+inv.sku_id 
+,inv.tag_id
+,inv.qty_on_hand quantity
+,inv.client_id
+,nvl(inv.user_def_chk_4,'N') customs_indicator
+,nvl(pal.host_pre_advice_id,inv.receipt_id) pre_advice_id
+,inv.line_id
+,inv.batch_id
+,inv.origin_id
+,nvl(sku.hazmat,'N') hazmat
+,sku.description
+,sku.each_quantity
+,to_char(inv.receipt_dstamp,'DD-MM-YYYY HH24:MI') receipt_date
+,(case 
+when nvl((select count(distinct srn.serial_number) nr_ser from dcsdba.serial_number srn where srn.tag_id=inv.tag_id and srn.sku_id=inv.sku_id and srn.client_id=inv.client_id),0)<>1 then null
+else (select distinct srn.serial_number ser_nr from dcsdba.serial_number srn where srn.tag_id=inv.tag_id and srn.sku_id=inv.sku_id and srn.client_id=inv.client_id) end) serial_number
+
+from dcsdba.inventory inv
+inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+left join dcsdba.pre_advice_line pal on pal.pre_advice_id=inv.receipt_id and pal.line_id=inv.line_id and pal.client_id=inv.client_id and pal.sku_id=inv.sku_id
+where inv.site_id = $P{site_id}
+and inv.tag_id=  $P{tag_id}]]>
+	</queryString>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="TAG_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TAG_ID"/>
+	</field>
+	<field name="QUANTITY" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="QUANTITY"/>
+	</field>
+	<field name="CLIENT_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENT_ID"/>
+	</field>
+	<field name="CUSTOMS_INDICATOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CUSTOMS_INDICATOR"/>
+	</field>
+	<field name="PRE_ADVICE_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PRE_ADVICE_ID"/>
+	</field>
+	<field name="LINE_ID" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="LINE_ID"/>
+	</field>
+	<field name="BATCH_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BATCH_ID"/>
+	</field>
+	<field name="ORIGIN_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORIGIN_ID"/>
+	</field>
+	<field name="HAZMAT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="HAZMAT"/>
+	</field>
+	<field name="DESCRIPTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIPTION"/>
+	</field>
+	<field name="EACH_QUANTITY" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="EACH_QUANTITY"/>
+	</field>
+	<field name="RECEIPT_DATE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="RECEIPT_DATE"/>
+	</field>
+	<field name="SERIAL_NUMBER" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SERIAL_NUMBER"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="437" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="80" y="140" width="100" height="20" uuid="c542ce44-72e9-4a50-b3fd-39b83393ed6b">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RECEIPT_DATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="140" width="60" height="20" uuid="598c974e-6561-463c-9a2c-516f355997ce">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date/Time]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="100" width="100" height="20" uuid="00cbafb5-53c6-4ccc-9eef-b71969bc5e77">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="100" width="60" height="20" uuid="1bf8120f-68ad-41fe-a497-dbf0e3adac36">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Client_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" x="20" y="345" width="50" height="20" uuid="d3d386f0-2b90-4a7d-b8b2-2dbe7e6d2e14">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Batch_ID:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="230" y="120" width="40" height="20" uuid="8e3a839f-2b5c-487b-8c97-fdc4fe88bbf4">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUSTOMS_INDICATOR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="120" width="50" height="20" uuid="8ca4c02f-52c3-47b4-a2d8-91f7020a8224">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Bonded]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="230" y="100" width="40" height="20" uuid="c40f9dd5-4cd4-4e51-9ea0-7f8cdc0f1312">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HAZMAT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="100" width="50" height="20" uuid="46250166-2f2b-49e9-bf58-50b41ca240d0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Hazmat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="160" width="60" height="20" uuid="3dca37e8-f148-4396-8427-7325122558bd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[PreAdv/Ln]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="160" width="30" height="20" uuid="809a6647-57a6-4824-bb71-b530dd240755">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LINE_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="140" width="40" height="20" uuid="24118741-06c3-4e70-83a4-e8229ab9f9fc">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORIGIN_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="140" width="50" height="20" uuid="8d9d3b0a-3f83-43c0-be85-d0e19ffd5bea">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[CoO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="190" width="50" height="20" uuid="e4eaa517-f08a-40a4-8dcd-3036c9a21468">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="60" y="210" width="200" height="40" uuid="f78e0096-3b60-41d8-9aee-cc0a749dc4c2">
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{SKU_ID}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<componentElement>
+				<reportElement x="23" y="304" width="140" height="30" uuid="c2841f85-6a04-4264-9b96-19ebb499063e">
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{SERIAL_NUMBER}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="20" y="260" width="250" height="20" uuid="7f890256-8b03-4ced-ba82-c851eeec20e5">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="20" width="60" height="20" uuid="3f1d3018-8117-40f3-9b68-cbbcbf7bdea6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[TAG_ID]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="71" y="40" width="190" height="40" uuid="5b43a28e-dc9b-4d95-80b1-1ba002cd76de">
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{TAG_ID}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<componentElement>
+				<reportElement x="120" y="365" width="140" height="30" uuid="5e2faf37-3839-4024-8ef0-8a3407ee75de">
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{BATCH_ID}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement x="230" y="160" width="40" height="20" uuid="e10d7ba9-9c0e-4c36-be6d-0122a5b9b6ad">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EACH_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="160" width="50" height="20" uuid="68adb09f-4fa9-4948-aa73-26494b30a7ce"/>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Multi Colli]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="160" width="70" height="20" uuid="5c498c15-2da8-4cf1-8a68-779811a5f6a3">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRE_ADVICE_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="190" width="200" height="20" uuid="0507a75e-79e9-440b-99cf-d1f80c9a0e49">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="20" width="190" height="20" uuid="40164dc0-ac02-4934-b9ce-bb463c2c4604">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TAG_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="23" y="284" width="140" height="20" uuid="01d9e298-7512-4249-98ec-cadf748561f6">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SERIAL_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="345" width="140" height="20" uuid="aa178deb-688f-4cc1-833c-bbf9d445dd97">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BATCH_ID}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="20" y="20" width="250" height="80" uuid="8cf14dcf-6e84-4f13-bb3b-663823ba97cd"/>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+			</frame>
+			<rectangle>
+				<reportElement mode="Transparent" x="20" y="180" width="250" height="215" uuid="9746223e-460f-46cd-a9d3-34a103e47212"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="20" y="180" width="250" height="100" uuid="715b64bf-b1d3-43fd-97d9-fb961e7017a1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="20" y="280" width="250" height="60" uuid="cc07a1bf-3698-4be4-bd7b-4c8157a37385"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="" x="210" y="284" width="60" height="20" uuid="c7848758-cff7-42df-8a2d-a1a15043bb4a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Serial_Nbr]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

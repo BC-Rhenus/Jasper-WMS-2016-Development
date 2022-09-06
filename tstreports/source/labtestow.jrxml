@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="labtest" pageWidth="227" pageHeight="210" columnWidth="188" leftMargin="19" rightMargin="20" topMargin="20" bottomMargin="21" uuid="8edad466-6634-44af-bc3f-e1e0d9fd29ff">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 ACC"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="container_id" class="java.lang.String"/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[with PP as (
+SELECT distinct 
+a.sku_id LABA, substr(b.UPC, 1, 11) UPC, a.order_id, a.customer_sku_desc2 ,a.qty_ordered, a.user_def_num_1
+from dcsdba.order_line a 
+join dcsdba.sku b on a.sku_id = b.sku_id and b.upc is not null
+where a.sku_id like 'LB%'
+)
+select distinct 
+       a.customer_sku_desc2, 
+       a.customer_sku_desc2 || '  Compromises the following Items:' ,
+       (substr(c.description, 1, 1)|| LOWER(substr(c.description, 2, 35))),
+       substr(INITCAP(c.description), 1, 28),
+       a.customer_sku_desc1,
+       a.sku_id,
+       'Qty:'||a.qty_ordered/d.qty_ordered QTY ,
+       d.LABA
+       ,d.UPC
+       from dcsdba.order_line a 
+       join dcsdba.sku c on a.sku_id = c.sku_id and a.client_id = c.client_id
+       --join dcsdba.order_header f on f.order_id = a.order_id
+       left join PP d on a.order_id = d.order_id and a.customer_sku_desc2 = d.customer_sku_desc2
+       left join dcsdba.move_task e on e.task_id = a.order_id and e.client_id = a.client_id
+       where  e.container_id =  $P{container_id} and a.client_id =  $P{client_id} and a.sku_id not like'BX%' and a.sku_id not like'LB%' and LABA not like 'BX%' and e.line_id = a.line_id
+       and a.sku_id = e.sku_id 
+       Order by 4,1 asc]]>
+	</queryString>
+	<field name="CUSTOMER_SKU_DESC2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CUSTOMER_SKU_DESC2"/>
+	</field>
+	<field name="A.CUSTOMER_SKU_DESC2||&apos;COMPROMISESTHEFOLLOWINGITEMS:&apos;" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label">
+			<![CDATA[A.CUSTOMER_SKU_DESC2||'COMPROMISESTHEFOLLOWINGITEMS:']]>
+		</property>
+	</field>
+	<field name="(SUBSTR(C.DESCRIPTION,1,1)||LOWER(SUBSTR(C.DESCRIPTION,2,35)))" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="(SUBSTR(C.DESCRIPTION,1,1)||LOWER(SUBSTR(C.DESCRIPTION,2,35)))"/>
+	</field>
+	<field name="SUBSTR(INITCAP(C.DESCRIPTION),1,28)" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SUBSTR(INITCAP(C.DESCRIPTION),1,28)"/>
+	</field>
+	<field name="CUSTOMER_SKU_DESC1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CUSTOMER_SKU_DESC1"/>
+	</field>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="QTY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="QTY"/>
+	</field>
+	<field name="LABA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LABA"/>
+	</field>
+	<field name="UPC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="UPC"/>
+	</field>
+	<group name="GroupPP" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{CUSTOMER_SKU_DESC2}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="PP"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="20" width="200" height="10" uuid="610633a4-efd4-400d-b945-081df2ad4d1d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{A.CUSTOMER_SKU_DESC2||'COMPROMISESTHEFOLLOWINGITEMS:'}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="1" y="10" width="109" height="9" uuid="efcdfccf-3d44-44ac-bdcc-b70d38e9bf2c">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Left" rotation="None">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<BAR=code128>" + $F{CUSTOMER_SKU_DESC2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="-4" width="99" height="14" uuid="33c47af7-1993-4a26-89e5-8428c677ceef">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUSTOMER_SKU_DESC2}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="127" y="-10" width="57" height="33" uuid="5de84e3a-a811-4c01-b21d-7b08cd2c7974"/>
+				<textElement>
+					<font fontName="Calibri" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<BAR=flirlogx>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="9" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="2" y="-1" width="100" height="9" uuid="58ad4c20-9060-49a0-ab11-498bb647e47b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="36ce5a45-4018-46b3-a02f-33e25ceae862"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="45" y="-1" width="130" height="9" uuid="80590b9e-affb-4e38-aa9e-56c9bf13f2b9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3e9e6d3d-794d-4bb7-bf8e-10934fe884d9"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUBSTR(INITCAP(C.DESCRIPTION),1,28)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="132" y="-1" width="28" height="9" uuid="374924ac-02bb-43a7-96c3-2b29292f8219">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="31295e33-6ef7-4adf-85f0-8e6a0f653507"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="43" splitType="Stretch">
+			<textField textAdjust="ScaleFont">
+				<reportElement x="120" y="28" width="70" height="14" uuid="2aaf583c-d8f3-4362-87d3-aef79fa81667">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" rotation="None">
+					<font size="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<BAR=code128>" + $F{LABA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="30" y="10" width="40" height="8" uuid="085a0461-c038-41c0-b059-fb6a21a9911d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UPC Code]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="143" y="18" width="47" height="10" uuid="6889742a-a4ef-4db2-a467-4c19c08b37e1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LABA}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="9" y="18" width="149" height="20" uuid="b3e204f3-0d44-40ba-9670-a3d0471de716">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Left" rotation="None">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<BAR=upca>" + $F{UPC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

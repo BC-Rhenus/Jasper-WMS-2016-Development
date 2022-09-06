@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2018-10-26T11:34:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5428875c-8fde-42c0-8754-fb3174570dd7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<parameter name="container_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select		order_id
+,				client_id
+,				container_id
+,				description
+from		cnl_sys.cnl_as_container_suspect
+where	container_id = $P{container_id}]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="802" height="79" uuid="01ce6020-0215-4abf-8c91-358a253b1b18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="25"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CONTAINER VAS INSTRUCTION"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="9d665c95-59b6-4b13-a0a8-c10f6f8028b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTAINER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="30" uuid="7c144437-3af9-4bcc-b2df-0db01f04f112"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="30" uuid="81301503-4359-4f5e-93ac-55fe9e49c858"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="501" height="30" uuid="8aa93d96-0aff-475d-abf9-1eaba2ec64e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="70" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="70" uuid="c9f73faf-1e5e-4f78-a870-d55a80bf0e54"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="70" uuid="78984b9b-052b-41ca-8e4a-37eb78c0a033"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="70" uuid="0ac9fa60-3789-4344-8f75-b0260e9ec5f5"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="502" height="70" uuid="2b705e41-9e32-46c5-9757-40539090bc1d"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

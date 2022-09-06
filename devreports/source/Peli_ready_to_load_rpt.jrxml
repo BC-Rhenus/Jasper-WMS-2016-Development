@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-07-27T15:01:50 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Peli_ready_to_load_rpt" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1eef9ec-57bd-41ab-93a7-a4b154e7ecf8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<queryString language="SQL">
+		<![CDATA[select  distinct ocr.order_id                                                                                    order_id                          
+,       ( select carrier_id from order_header where order_id = ocr.order_id)                            carrier
+,       ocr.pallet_id
+,       ( select  distinct decode(nvl(ocr2.pallet_labelled,'N'),'N','Pallet not yet labelled','Pallet is Ready')
+          from    order_container ocr2
+          where   ocr2.pallet_id = ocr.pallet_id
+        )                                                                                               pallet_status
+,       ( select tax_basis_5 from order_header where order_id = ocr.order_id)                           estimated_num_pallets
+,       ( select  count(distinct ocr4.pallet_id) 
+          from    order_container ocr4 
+          where   ocr4.order_id = ocr.order_id)                                                         total_pallets
+,       ( select  decode(count(*),0,'Ready to Load','Not Finished labelling yet')
+          from    order_container ocr3
+          where   ocr3.order_id = ocr.order_id
+          and     nvl(ocr3.pallet_labelled,'N') = 'N'
+        )                                                                                               order_status
+from    order_container ocr
+where   ocr.order_id in ( select  order_id 
+                          from    order_header 
+                          where   status = 'Ready to Load'
+                          and     carrier_id in ('ZTRP','RHENUSROAD.NL'))
+order by order_id, pallet_id, pallet_status]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="CARRIER" class="java.lang.String"/>
+	<field name="PALLET_ID" class="java.lang.String"/>
+	<field name="PALLET_STATUS" class="java.lang.String"/>
+	<field name="ESTIMATED_NUM_PALLETS" class="java.math.BigDecimal"/>
+	<field name="TOTAL_PALLETS" class="java.math.BigDecimal"/>
+	<field name="ORDER_STATUS" class="java.lang.String"/>
+	<title>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="8" width="570" height="30" uuid="6b23bedb-208f-40d7-a4d7-c70aa766f481"/>
+				<textElement textAlignment="Center">
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PELI Orders ready to be loaded overview]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="14" uuid="6ae8f948-1c15-45d4-9a8b-c787995590ff"/>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="73" y="0" width="70" height="14" uuid="bc9b5c8c-cf4d-4271-bba6-821be76453ff"/>
+				<text><![CDATA[CARRIER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="-3" width="100" height="17" uuid="19040056-dd6e-49d0-bf45-3a3cc23d9949"/>
+				<text><![CDATA[PALLET_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="243" y="0" width="107" height="30" uuid="eb05f66b-8d89-4c99-8dfe-5a7b681c607b"/>
+				<text><![CDATA[PALLET_STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="352" y="0" width="60" height="30" uuid="0285eb65-7015-4b99-b01c-7046206e0195"/>
+				<text><![CDATA[ESTIMATED_NUM_PALLETS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="0" width="40" height="30" uuid="4b831d52-a852-450b-890f-01d9a3609138"/>
+				<text><![CDATA[TOTAL_PALLETS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="457" y="1" width="113" height="30" uuid="b426484f-0ec2-48b2-8287-4f8a8b05542e"/>
+				<text><![CDATA[ORDER_STATUS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="71" height="20" uuid="2bb8b967-2893-4b69-bd7a-816da6afc3a5"/>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="0" width="70" height="20" uuid="c5e6440a-935e-425c-ab2e-63511937fa91"/>
+				<textFieldExpression><![CDATA[$F{CARRIER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="143" y="0" width="100" height="20" uuid="287bb7c3-c661-4445-8057-3d1b88470148"/>
+				<textFieldExpression><![CDATA[$F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="243" y="0" width="107" height="20" uuid="67991426-7f2f-42ed-9217-0855f2fe73c4"/>
+				<textFieldExpression><![CDATA[$F{PALLET_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="0" width="60" height="20" uuid="3e44dff5-49ea-41d1-9f50-8e94c3e5c393"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{ESTIMATED_NUM_PALLETS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="0" width="42" height="20" uuid="2667c8ad-d0dc-4764-8310-a4e77bcf4aab"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TOTAL_PALLETS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="457" y="0" width="113" height="20" uuid="765e5c08-8593-4289-aa10-c0b087d02a50"/>
+				<textFieldExpression><![CDATA[$F{ORDER_STATUS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

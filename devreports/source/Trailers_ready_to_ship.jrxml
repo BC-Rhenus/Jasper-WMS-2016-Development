@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-03-29T11:26:19 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Trailers_ready_to_ship" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="56335689-b12e-4e03-84d3-05a118ddda3a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<queryString language="SQL">
+		<![CDATA[select  distinct s.location_id
+,       'All orders Complete, Trailer can be shipped safely' action
+from    shipping_manifest s
+where   s.location_id in (select t.trailer_id from trailer t)
+and     nvl(s.shipped,'N') = 'N'
+and		s.site_id = 'NLSBR01'
+and     ( select  count(*) 
+          from    shipping_manifest s2 
+          where   s2.order_id in (  select  o.order_id 
+                                    from    order_header o 
+                                    where   o.order_id = s.order_id 
+                                    and     o.status != 'Complete')
+        ) = 0]]>
+	</queryString>
+	<field name="LOCATION_ID" class="java.lang.String"/>
+	<field name="ACTION" class="java.lang.String"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="21" width="554" height="30" uuid="37330a1e-8f79-4cd3-98a5-429ce34b34e4"/>
+				<textElement textAlignment="Center">
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trailers Safe to SHIP!!]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="57e4f39b-d77f-4bbb-b231-ed5e0cda6749"/>
+				<text><![CDATA[LOCATION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="420" height="20" uuid="55f63d21-158d-49c8-bdd5-04e8c88192d8"/>
+				<text><![CDATA[ACTION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="adee4c6f-1ee2-493c-9748-4617522d8dbb"/>
+				<textFieldExpression><![CDATA[$F{LOCATION_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="420" height="20" uuid="05d37f46-1ed4-4aab-b199-7a010f2739c6"/>
+				<textFieldExpression><![CDATA[$F{ACTION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

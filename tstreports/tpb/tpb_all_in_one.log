@@ -1,0 +1,109 @@
+
+**************************************************************
+ TPB All In One script started at Tue Sep  6 00:00:27 CEST 2022 
+**************************************************************
+
+Renaming of logfiles started at Tue Sep  6 00:00:27 CEST 2022
+
+Defining the environment at Tue Sep  6 00:00:27 CEST 2022
+
+Environment = dehze01-lsv365_TSTCNLJW
+
+Billinginterfacedaemon started at Tue Sep  6 00:00:27 CEST 2022
+
+Type = CLIENT so retrieve the ClientIDs and write these into a file
+Client file created at Tue Sep  6 00:00:53 CEST 2022 with Clients:
+
+AGNO
+AKZNB
+CANAR
+CLEANB
+CRLBC
+EFI
+FLIRB
+FONTEM
+FUNKO
+GFORM
+HYGEN
+INNOV
+IROBOTUK
+IRODIR
+MASIM
+MLM
+PLANT
+RESYCA
+ROBOP
+SENTEC
+SYNER
+
+Now reading the Clients file and create a logfile and run the Billingprocdae per Client
+
+Billingprocdae for Client AGNO started at Tue Sep  6 00:00:53 CEST 2022
+Billingprocdae for Client AGNO finished at Tue Sep  6 00:00:54 CEST 2022
+
+Billingprocdae for Client AKZNB started at Tue Sep  6 00:00:54 CEST 2022
+Billingprocdae for Client AKZNB finished at Tue Sep  6 00:00:54 CEST 2022
+
+Billingprocdae for Client CANAR started at Tue Sep  6 00:00:54 CEST 2022
+Billingprocdae for Client CANAR finished at Tue Sep  6 00:00:54 CEST 2022
+
+Billingprocdae for Client CLEANB started at Tue Sep  6 00:00:54 CEST 2022
+Billingprocdae for Client CLEANB finished at Tue Sep  6 00:00:54 CEST 2022
+
+Billingprocdae for Client CRLBC started at Tue Sep  6 00:00:54 CEST 2022
+Billingprocdae for Client CRLBC finished at Tue Sep  6 00:00:54 CEST 2022
+
+Billingprocdae for Client EFI started at Tue Sep  6 00:00:54 CEST 2022
+Billingprocdae for Client EFI finished at Tue Sep  6 00:00:55 CEST 2022
+
+Billingprocdae for Client FLIRB started at Tue Sep  6 00:00:55 CEST 2022
+Billingprocdae for Client FLIRB finished at Tue Sep  6 00:00:55 CEST 2022
+
+Billingprocdae for Client FONTEM started at Tue Sep  6 00:00:55 CEST 2022
+Billingprocdae for Client FONTEM finished at Tue Sep  6 00:00:55 CEST 2022
+
+Billingprocdae for Client FUNKO started at Tue Sep  6 00:00:55 CEST 2022
+Billingprocdae for Client FUNKO finished at Tue Sep  6 00:00:56 CEST 2022
+
+Billingprocdae for Client GFORM started at Tue Sep  6 00:00:56 CEST 2022
+Billingprocdae for Client GFORM finished at Tue Sep  6 00:00:56 CEST 2022
+
+Billingprocdae for Client HYGEN started at Tue Sep  6 00:00:56 CEST 2022
+Billingprocdae for Client HYGEN finished at Tue Sep  6 00:00:56 CEST 2022
+
+Billingprocdae for Client INNOV started at Tue Sep  6 00:00:56 CEST 2022
+Billingprocdae for Client INNOV finished at Tue Sep  6 00:00:56 CEST 2022
+
+Billingprocdae for Client IROBOTUK started at Tue Sep  6 00:00:56 CEST 2022
+Billingprocdae for Client IROBOTUK finished at Tue Sep  6 00:00:57 CEST 2022
+
+Billingprocdae for Client IRODIR started at Tue Sep  6 00:00:57 CEST 2022
+Billingprocdae for Client IRODIR finished at Tue Sep  6 00:00:57 CEST 2022
+
+Billingprocdae for Client MASIM started at Tue Sep  6 00:00:57 CEST 2022
+Billingprocdae for Client MASIM finished at Tue Sep  6 00:00:57 CEST 2022
+
+Billingprocdae for Client MLM started at Tue Sep  6 00:00:57 CEST 2022
+Billingprocdae for Client MLM finished at Tue Sep  6 00:00:57 CEST 2022
+
+Billingprocdae for Client PLANT started at Tue Sep  6 00:00:57 CEST 2022
+Billingprocdae for Client PLANT finished at Tue Sep  6 00:00:57 CEST 2022
+
+Billingprocdae for Client RESYCA started at Tue Sep  6 00:00:57 CEST 2022
+Billingprocdae for Client RESYCA finished at Tue Sep  6 00:00:57 CEST 2022
+
+Billingprocdae for Client ROBOP started at Tue Sep  6 00:00:57 CEST 2022
+Billingprocdae for Client ROBOP finished at Tue Sep  6 00:00:58 CEST 2022
+
+Billingprocdae for Client SENTEC started at Tue Sep  6 00:00:58 CEST 2022
+Billingprocdae for Client SENTEC finished at Tue Sep  6 00:00:58 CEST 2022
+
+Billingprocdae for Client SYNER started at Tue Sep  6 00:00:58 CEST 2022
+Billingprocdae for Client SYNER finished at Tue Sep  6 00:00:58 CEST 2022
+
+Billingprocdae per Client for all Clients finished at Tue Sep  6 00:00:58 CEST 2022
+
+**************************************************************
+ TPB All In One script finished at Tue Sep  6 00:00:58 CEST 2022 
+**************************************************************
+

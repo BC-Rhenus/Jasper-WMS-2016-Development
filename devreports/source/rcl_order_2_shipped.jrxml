@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-07-26T15:12:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_order_2_shipped" language="groovy" pageWidth="2380" pageHeight="1684" orientation="Landscape" columnWidth="2380" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.6500000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_ACC"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\martijn.schijvenaars\\JaspersoftWorkspace\\WMS2016 - Reports"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select record_type||'|'||merge_action||'|'||order_id||'|'||order_type||'|'||status||'|'||priority||'|'||ship_dock||'|'||work_group||'|'||consignment||'|'||delivery_point||'|'||load_sequence||'|'||from_site_id||'|'||to_site_id||'|'||customer_id||'|'||order_date||'|'||ship_by_date||'|'||purchase_order||'|'||contact||'|'||contact_phone||'|'||contact_fax||'|'||contact_email||'|'||name||'|'||address1||'|'||address2||'|'||town||'|'||county||'|'||postcode||'|'||country||'|'||instructions||'|'||repack||'|'||owner_id||'|'||carrier_id||'|'||dispatch_method||'|'||service_level||'|'||inv_address_id||'|'||inv_contact||'|'||inv_contact_phone||'|'||inv_contact_fax||'|'||inv_contact_email||'|'||inv_name||'|'||inv_address1||'|'||inv_address2||'|'||inv_town||'|'||inv_county||'|'||inv_postcode||'|'||inv_country||'|'||deliver_by_date||'|'||fastest_carrier||'|'||cheapest_carrier||'|'||site_replen||'|'||cid_number||'|'||sid_number||'|'||location_number||'|'||freight_charges||'|'||client_id||'|'||export||'|'||disallow_merge_rules||'|'||user_def_type_1||'|'||user_def_type_2||'|'||user_def_type_3||'|'||user_def_type_4||'|'||user_def_type_5||'|'||user_def_type_6||'|'||user_def_type_7||'|'||user_def_type_8||'|'||user_def_chk_1||'|'||user_def_chk_2||'|'||user_def_chk_3||'|'||user_def_chk_4||'|'||user_def_date_1||'|'||user_def_date_2||'|'||user_def_date_3||'|'||user_def_date_4||'|'||user_def_num_1||'|'||user_def_num_2||'|'||user_def_num_3||'|'||user_def_num_4||'|'||user_def_note_1||'|'||user_def_note_2||'|'||soh_id||'|'||move_task_status||'|'||time_zone_name||'|'||repack_loc_id||'|'||ce_reason_code||'|'||ce_reason_notes||'|'||ce_order_type||'|'||ce_customs_customer||'|'||ce_excise_customer||'|'||ce_instructions||'|'||client_group||'|'||delivered_dstamp||'|'||signatory||'|'||route_id||'|'||cross_dock_to_site||'|'||web_service_alloc_immed||'|'||web_service_alloc_clean||'|'||disallow_short_ship||'|'||work_order_type||'|'||status_reason_code||'|'||hub_address_id||'|'||hub_contact||'|'||hub_contact_phone||'|'||hub_contact_fax||'|'||hub_contact_email||'|'||hub_name||'|'||hub_address1||'|'||hub_address2||'|'||hub_town||'|'||hub_county||'|'||hub_postcode||'|'||hub_country||'|'||stage_route_id||'|'||single_order_sortation||'|'||hub_carrier_id||'|'||hub_service_level||'|'||force_single_carrier||'|'||expected_value||'|'||expected_volume||'|'||expected_weight||'|'||tod||'|'||tod_place||'|'||language||'|'||seller_name||'|'||seller_phone||'|'||documentation_text_1||'|'||documentation_text_2||'|'||documentation_text_3||'|'||cod||'|'||cod_value||'|'||cod_currency||'|'||cod_type||'|'||vat_number||'|'||inv_vat_number||'|'||hub_vat_number||'|'||inv_reference||'|'||inv_dstamp||'|'||inv_currency||'|'||print_invoice||'|'||letter_of_credit||'|'||payment_terms||'|'||subtotal_1||'|'||subtotal_2||'|'||subtotal_3||'|'||subtotal_4||'|'||freight_cost||'|'||freight_terms||'|'||insurance_cost||'|'||misc_charges||'|'||discount||'|'||other_fee||'|'||inv_total_1||'|'||inv_total_2||'|'||inv_total_3||'|'||inv_total_4||'|'||tax_rate_1||'|'||tax_basis_1||'|'||tax_amount_1||'|'||tax_rate_2||'|'||tax_basis_2||'|'||tax_amount_2||'|'||tax_rate_3||'|'||tax_basis_3||'|'||tax_amount_3||'|'||tax_rate_4||'|'||tax_basis_4||'|'||tax_amount_4||'|'||tax_rate_5||'|'||tax_basis_5||'|'||tax_amount_5||'|'||order_reference||'|'||start_by_date||'|'||metapack_carrier_pre||'|'||collective_mode||'|'||contact_mobile||'|'||inv_contact_mobile||'|'||hub_contact_mobile||'|'||shipment_group||'|'||freight_currency||'|'||ncts||'|'||nls_calendar||'|'||mpack_consignment||'|'||mpack_nominated_dstamp||'|'||gln||'|'||hub_gln||'|'||inv_gln||'|'||allocation_priority||'|'||allow_pallet_pick||'|'||split_shipping_units||'|'||vol_pck_sscc_label||'|'||collective_sequence||'|'||trax_use_hub_addr||'|'||direct_to_store||'|'||vol_ctr_label_format||'|'||retailer_id||'|'||carrier_bags
+text
+from (
+select 'ODH' record_type,'U' merge_action
+,odh.order_id order_id
+,'@' order_type
+,'Shipped' status
+,'@' priority,'@' ship_dock,'@' work_group,'@' consignment,'@' delivery_point,'@' load_sequence
+,odh.from_site_id from_site_id
+,'@' to_site_id,'@' customer_id,'@' order_date,'@' ship_by_date,'@' purchase_order,'@' contact,'@' contact_phone,'@' contact_fax,'@' contact_email,'@' name,'@' address1,'@' address2,'@' town,'@' county,'@' postcode,'@' country,'@' instructions,'@' repack
+,odh.owner_id owner_id
+,'@' carrier_id,'@' dispatch_method,'@' service_level,'@' inv_address_id,'@' inv_contact,'@' inv_contact_phone,'@' inv_contact_fax,'@' inv_contact_email,'@' inv_name,'@' inv_address1,'@' inv_address2,'@' inv_town,'@' inv_county,'@' inv_postcode,'@' inv_country,'@' deliver_by_date,'@' fastest_carrier,'@' cheapest_carrier,'@' site_replen,'@' cid_number,'@' sid_number,'@' location_number,'@' freight_charges
+,odh.client_id client_id
+,'@' export,'@' disallow_merge_rules,'@' user_def_type_1,'@' user_def_type_2,'@' user_def_type_3,'@' user_def_type_4,'@' user_def_type_5,'@' user_def_type_6,'@' user_def_type_7,'@' user_def_type_8,'@' user_def_chk_1,'@' user_def_chk_2,'@' user_def_chk_3,'@' user_def_chk_4,'@' user_def_date_1,'@' user_def_date_2,'@' user_def_date_3,'@' user_def_date_4,'@' user_def_num_1,'@' user_def_num_2,'@' user_def_num_3,'@' user_def_num_4,'@' user_def_note_1,'@' user_def_note_2,'@' soh_id,'@' move_task_status,'@' time_zone_name,'@' repack_loc_id,'@' ce_reason_code,'@' ce_reason_notes,'@' ce_order_type,'@' ce_customs_customer,'@' ce_excise_customer,'@' ce_instructions,'@' client_group,'@' delivered_dstamp,'@' signatory,'@' route_id,'@' cross_dock_to_site,'@' web_service_alloc_immed,'@' web_service_alloc_clean,'@' disallow_short_ship,'@' work_order_type,'@' status_reason_code,'@' hub_address_id,'@' hub_contact,'@' hub_contact_phone,'@' hub_contact_fax,'@' hub_contact_email,'@' hub_name,'@' hub_address1,'@' hub_address2,'@' hub_town,'@' hub_county,'@' hub_postcode,'@' hub_country,'@' stage_route_id,'@' single_order_sortation,'@' hub_carrier_id,'@' hub_service_level,'@' force_single_carrier,'@' expected_value,'@' expected_volume,'@' expected_weight,'@' tod,'@' tod_place,'@' language,'@' seller_name,'@' seller_phone,'@' documentation_text_1,'@' documentation_text_2,'@' documentation_text_3,'@' cod,'@' cod_value,'@' cod_currency,'@' cod_type,'@' vat_number,'@' inv_vat_number,'@' hub_vat_number,'@' inv_reference,'@' inv_dstamp,'@' inv_currency,'@' print_invoice,'@' letter_of_credit,'@' payment_terms,'@' subtotal_1,'@' subtotal_2,'@' subtotal_3,'@' subtotal_4,'@' freight_cost,'@' freight_terms,'@' insurance_cost,'@' misc_charges,'@' discount,'@' other_fee,'@' inv_total_1,'@' inv_total_2,'@' inv_total_3,'@' inv_total_4,'@' tax_rate_1,'@' tax_basis_1,'@' tax_amount_1,'@' tax_rate_2,'@' tax_basis_2,'@' tax_amount_2,'@' tax_rate_3,'@' tax_basis_3,'@' tax_amount_3,'@' tax_rate_4,'@' tax_basis_4,'@' tax_amount_4,'@' tax_rate_5,'@' tax_basis_5,'@' tax_amount_5,'@' order_reference,'@' start_by_date,'@' metapack_carrier_pre,'@' collective_mode,'@' contact_mobile,'@' inv_contact_mobile,'@' hub_contact_mobile,'@' shipment_group,'@' freight_currency,'@' ncts,'@' nls_calendar,'@' mpack_consignment,'@' mpack_nominated_dstamp,'@' gln,'@' hub_gln,'@' inv_gln,'@' allocation_priority,'@' allow_pallet_pick,'@' split_shipping_units,'@' vol_pck_sscc_label,'@' collective_sequence,'@' trax_use_hub_addr,'@' direct_to_store,'@' vol_ctr_label_format,'@' retailer_id,'@' carrier_bags
+from dcsdba.order_header odh
+inner join dcsdba.inventory_transaction itr on odh.order_id=itr.reference_id and odh.client_id=itr.client_id and itr.code='Order Status'
+where odh.client_id=$P{client_id}
+and odh.status='In Progress'
+and itr.from_status='Shipped'
+and itr.to_status='In Progress'
+)]]>
+	</queryString>
+	<field name="TEXT" class="java.lang.String"/>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="2" splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="2380" height="2" uuid="3e101b4c-9c2b-4506-b20a-8bf0e88c6a38">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TEXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

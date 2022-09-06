@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5428875c-8fde-42c0-8754-fb3174570dd7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<parameter name="container_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select		container_id
+,				client_id
+,				order_id
+,				sku_id
+,				activity_name
+,				activity_description
+,				activity_instruction
+from		cnl_sys.cnl_container_vas_activity
+where	container_id = $P{container_id}
+or			( 		container_id is null and
+						client_id = (select client_id from dcsdba.order_container where container_id = $P{container_id}) and
+						( 	order_id = (select order_id from dcsdba.order_container where container_id = $P{container_id}) or
+							order_id is null
+						 ) and
+						sku_id is null
+				) or 
+				( 		container_id is null and
+						client_id = (select client_id from dcsdba.order_container where container_id = $P{container_id}) and
+						( 	order_id = (select order_id from dcsdba.order_container where container_id = $P{container_id}) or
+							order_id is null
+						 ) and
+						sku_id in ( select sku_id from dcsdba.inventory where container_id = $P{container_id})
+					)]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="ACTIVITY_NAME" class="java.lang.String"/>
+	<field name="ACTIVITY_DESCRIPTION" class="java.lang.String"/>
+	<field name="ACTIVITY_INSTRUCTION" class="java.lang.String"/>
+	<title>
+		<band height="82" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="802" height="79" uuid="01ce6020-0215-4abf-8c91-358a253b1b18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="25"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CONTAINER VAS INSTRUCTION"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="150" height="20" uuid="61426879-245b-4a4a-b584-08238f33a4db"/>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="121" height="20" uuid="7e22f954-83a8-4582-998e-a7a7c1b47025"/>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="121" height="20" uuid="f314c4f2-918e-427b-81a5-d35f28ebf05e"/>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="160" height="18" uuid="e0701cb2-d6ce-47bd-9db4-2aa1fe69bd35"/>
+				<box>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTIVITY_NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="250" height="20" uuid="9f12af3c-4192-43ef-9fea-00ccaee7f6b8"/>
+				<box>
+					<topPen lineStyle="Solid"/>
+					<leftPen lineStyle="Solid"/>
+					<bottomPen lineStyle="Solid"/>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTIVITY_DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="2" width="270" height="18" uuid="4d7e0f91-d93c-4038-9ca7-7af21d5acbf7"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTIVITY_INSTRUCTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="121" height="20" uuid="54de6a62-abe7-4137-a0ed-9dccc9063dc9"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="160" height="20" uuid="b9ab331e-d27b-4088-9064-111b46bc15dd"/>
+				<box>
+					<topPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{ACTIVITY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="160" y="0" width="250" height="20" uuid="a78ea677-ce47-4b54-8ef6-6fc67adb039d"/>
+				<box>
+					<topPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{ACTIVITY_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="410" y="0" width="270" height="20" uuid="e11a5fa1-3af8-43ed-9a4d-2f8b933ff621"/>
+				<box>
+					<topPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{ACTIVITY_INSTRUCTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="680" y="0" width="121" height="20" uuid="a4519128-0525-4685-8515-1eab462ece18"/>
+				<box>
+					<topPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.4" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

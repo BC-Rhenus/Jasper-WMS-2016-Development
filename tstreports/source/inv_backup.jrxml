@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inv_backup_med" pageWidth="1200" pageHeight="842" columnWidth="1160" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f720691b-37f1-4c1e-a449-04ab751abb5e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="IklOVkVOVE9SWSIgLDE1LDE1LGMyY2I0YzlkLWJjYjQtNDhlZS04NjlmLTI3N2IwZGJjMzllNjs="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TST2016DCSDBA"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="site_id" class="java.lang.String"/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT "INVENTORY"."CLIENT_ID",
+	"INVENTORY"."TAG_ID",
+	"INVENTORY"."SKU_ID",
+	"INVENTORY"."BATCH_ID",
+	"INVENTORY"."LOCATION_ID",
+	to_char( qty_on_hand,'fm999999990'),
+	to_char( qty_allocated,'fm999999990'),
+	"INVENTORY"."DESCRIPTION",
+	"INVENTORY"."LOCK_CODE",
+	to_char( expiry_dstamp,'dd/mm/yyyy'),
+	"INVENTORY"."CONDITION_ID",
+	"INVENTORY"."PALLET_ID",
+	"INVENTORY"."CONTAINER_ID",
+	"INVENTORY"."USER_DEF_TYPE_5"
+FROM "INVENTORY"
+WHERE 
+	 "INVENTORY"."SITE_ID"  = $P{site_id}
+	 AND "INVENTORY"."CLIENT_ID" = $P{client_id}]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENT_ID"/>
+	</field>
+	<field name="TAG_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TAG_ID"/>
+	</field>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="BATCH_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BATCH_ID"/>
+	</field>
+	<field name="LOCATION_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LOCATION_ID"/>
+	</field>
+	<field name="TO_CHAR(QTY_ON_HAND,&apos;FM999999990&apos;)" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label">
+			<![CDATA[TO_CHAR(QTY_ON_HAND,'FM999999990')]]>
+		</property>
+	</field>
+	<field name="TO_CHAR(QTY_ALLOCATED,&apos;FM999999990&apos;)" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label">
+			<![CDATA[TO_CHAR(QTY_ALLOCATED,'FM999999990')]]>
+		</property>
+	</field>
+	<field name="DESCRIPTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIPTION"/>
+	</field>
+	<field name="LOCK_CODE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LOCK_CODE"/>
+	</field>
+	<field name="TO_CHAR(EXPIRY_DSTAMP,&apos;DD/MM/YYYY&apos;)" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label">
+			<![CDATA[TO_CHAR(EXPIRY_DSTAMP,'DD/MM/YYYY')]]>
+		</property>
+	</field>
+	<field name="CONDITION_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONDITION_ID"/>
+	</field>
+	<field name="PALLET_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PALLET_ID"/>
+	</field>
+	<field name="CONTAINER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONTAINER_ID"/>
+	</field>
+	<field name="USER_DEF_TYPE_5" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="USER_DEF_TYPE_5"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="92" height="30" uuid="d5f3e868-2759-4209-b747-7b41b7708c52">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b18483c4-dd46-41c6-9ea0-02c0fb2853d1"/>
+				</reportElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="92" y="0" width="89" height="30" uuid="2dc45086-19d2-438e-a24e-7e213b4fe2ea">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f0d4947a-df69-4e11-bd61-a2558a4d79e0"/>
+				</reportElement>
+				<text><![CDATA[TAG_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="181" y="0" width="89" height="30" uuid="c806bf2e-a4c0-41c8-acbe-e11f824b5dad">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="78bc9675-a49e-48a9-9903-3f110f6573aa"/>
+				</reportElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="0" width="89" height="30" uuid="2a9d778d-953c-42e5-9d0f-2dfdf33f9ea3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7bc5eab2-bab7-4898-abc0-7b250c5f44a8"/>
+				</reportElement>
+				<text><![CDATA[BATCH_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="359" y="0" width="89" height="30" uuid="10d12476-cb2c-4c82-a324-a3203688d19f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b791d579-5379-42c5-ae18-2e94373be223"/>
+				</reportElement>
+				<text><![CDATA[LOCATION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="0" width="89" height="30" uuid="cb71fe81-ea61-4596-a7cd-7311b37735f5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="68e64e4b-3006-4900-81d5-b0b1c88e7511"/>
+				</reportElement>
+				<text><![CDATA[TO_CHAR(QTY_ON_HAND,'FM999999990')]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="537" y="0" width="89" height="30" uuid="d3832a23-3482-48ad-9cd7-889e80c23bd9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0f5e2c97-bb85-4310-a4f5-c1b93cd0b881"/>
+				</reportElement>
+				<text><![CDATA[TO_CHAR(QTY_ALLOCATED,'FM999999990')]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="626" y="0" width="89" height="30" uuid="b77503bc-617c-49f1-b312-3b63e633cea5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea5737f6-b4b2-4ed5-869f-b10bc0d1cc52"/>
+				</reportElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="715" y="0" width="89" height="30" uuid="0acb55e6-9e31-4a40-aef3-2647f7632a34">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="834fd94a-4c7b-4b3c-82b7-20eed81fe881"/>
+				</reportElement>
+				<text><![CDATA[LOCK_CODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="804" y="0" width="89" height="30" uuid="b2991a2e-2061-40ae-9fb7-c48f6897a435">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4ab615be-a641-4661-994e-a169b97d3b2b"/>
+				</reportElement>
+				<text><![CDATA[TO_CHAR(EXPIRY_DSTAMP,'DD/MM/YYYY')]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="893" y="0" width="89" height="30" uuid="319d7006-efc7-47d9-8926-fda3c912eed6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2f73f9d8-48cd-4d6d-b933-7d921269823a"/>
+				</reportElement>
+				<text><![CDATA[CONDITION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="982" y="0" width="89" height="30" uuid="333b4e95-a61a-4f78-a5d6-c0b68fcd52b4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="31c2520e-a639-467f-8055-79234b0cd650"/>
+				</reportElement>
+				<text><![CDATA[PALLET_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1071" y="0" width="89" height="30" uuid="33b4181d-d535-451d-9527-24a63b91c750">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dea274d0-8c4b-466f-a216-9161033f4002"/>
+				</reportElement>
+				<text><![CDATA[CONTAINER_ID]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="92" height="30" uuid="0e2285c3-9999-4310-973f-b5f25385bcf7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b18483c4-dd46-41c6-9ea0-02c0fb2853d1"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="0" width="89" height="30" uuid="5467ba3e-77e3-4fc6-8da5-da2390dd40bd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f0d4947a-df69-4e11-bd61-a2558a4d79e0"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TAG_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="0" width="89" height="30" uuid="65105cb7-b862-4c31-b523-62bea97597a3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="78bc9675-a49e-48a9-9903-3f110f6573aa"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="0" width="89" height="30" uuid="3e1c9a45-c615-4be1-bf36-73530160c933">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7bc5eab2-bab7-4898-abc0-7b250c5f44a8"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{BATCH_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="0" width="89" height="30" uuid="95b1d9da-be41-4ec3-96f2-48b786364480">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b791d579-5379-42c5-ae18-2e94373be223"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCATION_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="448" y="0" width="89" height="30" uuid="c7bfb238-5924-4662-ab74-26c8f1c420e8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="68e64e4b-3006-4900-81d5-b0b1c88e7511"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TO_CHAR(QTY_ON_HAND,'FM999999990')}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="537" y="0" width="89" height="30" uuid="6dff43b8-e03f-4e13-ab84-b377319cb898">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0f5e2c97-bb85-4310-a4f5-c1b93cd0b881"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TO_CHAR(QTY_ALLOCATED,'FM999999990')}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="626" y="0" width="89" height="30" uuid="0b69529a-4faa-4607-a156-52693c4922fd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea5737f6-b4b2-4ed5-869f-b10bc0d1cc52"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="715" y="0" width="89" height="30" uuid="67f2d2e9-0ba5-4b74-a340-716cf7cd500a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="834fd94a-4c7b-4b3c-82b7-20eed81fe881"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCK_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="804" y="0" width="89" height="30" uuid="82932f23-03f1-4c66-a8d4-1de0063253f0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4ab615be-a641-4661-994e-a169b97d3b2b"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TO_CHAR(EXPIRY_DSTAMP,'DD/MM/YYYY')}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="893" y="0" width="89" height="30" uuid="301d6f4e-629a-4c66-9373-4ebece5cad09">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2f73f9d8-48cd-4d6d-b933-7d921269823a"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CONDITION_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="982" y="0" width="89" height="30" uuid="59d0a35d-bde8-4238-aa94-79fcb541336a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="31c2520e-a639-467f-8055-79234b0cd650"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1071" y="0" width="89" height="30" uuid="459bf2d9-cacc-404c-bbe4-6c04a1f5aaa7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dea274d0-8c4b-466f-a216-9161033f4002"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

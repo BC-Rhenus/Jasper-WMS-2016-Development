@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-03-04T13:17:42 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_mlb_return_relocate" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.6500000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_PRD"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\martijn.schijvenaars\\JaspersoftWorkspace\\WMS2016 - Reports"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select record_type||'|'||merge_action||'|'||to_loc_id||'|'||tag_id||'|'||sku_id||'|'||pallet_id||'|'||from_loc_id||'|'||client_id||'|'||site_id||'|'||quantity||'|'||move_if_allocated||'|'||move_task_status||'|'||find_location||'|'||disallow_tag_swap||'|'||time_zone_name||'|'||nls_calendar
+text
+from (
+select 'RLC' record_type,'A' merge_action
+,(case when loc_topup_01 is not null then loc_topup_01
+when loc_topup_01 is null and loc_topup_02 is not null then loc_topup_02
+/*when loc_topup_01 is null and loc_topup_02 is null and loc_new_01 is not null then loc_new_01
+when loc_topup_01 is null and loc_topup_01 is null and loc_new_01 is null and loc_new_02 is not null then loc_new_02*/
+else '' end) to_loc_id
+,tag_id tag_id,sku_id sku_id,'' pallet_id,location_id from_loc_id,client_id client_id,site_id site_id
+,qty_on_hand quantity,'Y' move_if_allocated,'Released' move_task_status
+,(case when loc_topup_01 is not null then 'N'
+when loc_topup_01 is null and loc_topup_02 is not null then 'N'
+/*when loc_topup_01 is null and loc_topup_02 is null and loc_new_01 is not null then loc_new_01
+when loc_topup_01 is null and loc_topup_01 is null and loc_new_01 is null and loc_new_02 is not null then loc_new_02*/
+else 'Y' end) find_location
+,'N' disallow_tag_swap,'' time_zone_name,'' nls_calendar
+from (
+select inv.tag_id,inv.sku_id,inv.location_id,inv.client_id,inv.site_id,inv.qty_on_hand
+,(select loc3.location_id from dcsdba.location loc3
+inner join dcsdba.inventory inv3 on loc3.location_id=inv3.location_id and loc3.site_id=inv3.site_id
+where loc3.site_id=loc.site_id
+and loc3.zone_1='SS101'
+and loc3.subzone_1='01'
+and inv3.sku_id=inv.sku_id
+and nvl(inv3.batch_id,'N')=nvl(inv.batch_id,'N')
+and nvl(inv3.condition_id,'N')=nvl(inv.condition_id,'N')
+and (((loc3.volume/100)*85)-(nvl(loc3.alloc_volume,0))) >= (inv.qty_on_hand * nvl(sku.packed_volume,sku.each_volume))
+and rownum=1) loc_topup_01
+,(select loc4.location_id from dcsdba.location loc4
+inner join dcsdba.inventory inv4 on loc4.location_id=inv4.location_id and loc4.site_id=inv4.site_id
+where loc4.site_id=loc.site_id
+and loc4.zone_1='SS101'
+and loc4.subzone_1='02'
+and inv4.sku_id=inv.sku_id
+and nvl(inv4.batch_id,'N')=nvl(inv.batch_id,'N')
+and nvl(inv4.condition_id,'N')=nvl(inv.condition_id,'N')
+and (((loc4.volume/100)*85)-(nvl(loc4.alloc_volume,0))) >= (inv.qty_on_hand * nvl(sku.packed_volume,sku.each_volume))
+and rownum=1) loc_topup_02
+/*,(select loc5.location_id from dcsdba.location loc5
+where loc5.site_id=loc.site_id
+and loc5.zone_1='SS101'
+and loc5.subzone_1='01'
+and nvl(loc5.alloc_volume,0)=0
+and nvl(loc5.current_volume,0)=0
+and rownum=1) loc_new_01
+,(select loc6.location_id from dcsdba.location loc6
+where loc6.site_id=loc.site_id
+and loc6.zone_1='SS101'
+and loc6.subzone_1='02'
+and nvl(loc6.alloc_volume,0)=0
+and nvl(loc6.current_volume,0)=0
+and rownum=1) loc_new_02*/
+from dcsdba.inventory inv
+inner join dcsdba.location loc on inv.location_id=loc.location_id and inv.site_id=loc.site_id
+inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+where loc.zone_1='SS1RR'
+and inv.client_id='MLM'
+and not exists (select 1 from dcsdba.inventory inv2
+    inner join dcsdba.location loc2 on inv2.location_id=loc2.location_id and inv2.site_id=loc2.site_id
+    where inv2.site_id=loc.site_id
+    and inv2.client_id=inv.client_id
+    and loc2.zone_1=loc.zone_1
+    and nvl(loc2.subzone_1,'0')=nvl(loc.subzone_1,'0')
+    and substr(inv2.location_id,4,3)=substr(loc.location_id,4,3)
+    and inv2.condition_id is not null)
+and not exists (select 1 from dcsdba.move_task mt1
+    where mt1.site_id=inv.site_id
+    and mt1.client_id=inv.client_id
+    and mt1.tag_id=inv.tag_id
+    and mt1.task_type='M'
+    and mt1.from_loc_id=inv.location_id)
+))]]>
+	</queryString>
+	<field name="TEXT" class="java.lang.String"/>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="2" splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="842" height="2" uuid="3e101b4c-9c2b-4506-b20a-8bf0e88c6a38">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TEXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

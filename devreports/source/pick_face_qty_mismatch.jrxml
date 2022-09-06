@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-04-03T12:46:12 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pick_face_qty_mismatch" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fa6bb96f-9db1-499d-8c80-592f6b256ac9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<parameter name="site_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select    		p.sku_id																	sku_id
+,         			p.zone_1																	location_zone
+,         			p.qty_on_hand 														pick_face_qty
+,         			sum(i.qty_on_hand) 											inventory_qty
+,        			p.qty_on_hand - sum(i.qty_on_hand)  	 			qty_mismatch
+from      		pick_face p
+,         			inventory i
+where    	p.client_id 		= $P{client_id}
+and				p.site_id			= $P{site_id}
+and      		i.lock_status = 'UnLocked'
+and       		i.location_id not in ( select  	l.location_id
+                						                from    	location l
+                        	          					where   	l.site_id = i.site_id
+                            	      					and     		l.lock_status = 'Locked'
+                                					  )
+and       		nvl(i.condition_id,'N') = nvl(p.condition_id,'N')
+and       		nvl(i.origin_id,'N') = nvl(p.origin_id,'N')
+and       		nvl(i.spec_code,'N') = nvl(p.spec_code,'N')
+and       		i.sku_id = p.sku_id
+and       		i.zone_1 = p.zone_1
+and       		i.client_id = p.client_id
+and       		i.site_id = p.site_id
+group by  	p.sku_id
+,         			p.zone_1
+,         			p.qty_on_hand
+having    	p.qty_on_hand - sum(i.qty_on_hand) != 0]]>
+	</queryString>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="LOCATION_ZONE" class="java.lang.String"/>
+	<field name="PICK_FACE_QTY" class="java.math.BigDecimal"/>
+	<field name="INVENTORY_QTY" class="java.math.BigDecimal"/>
+	<field name="QTY_MISMATCH" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="6" width="554" height="30" uuid="84cb1c66-7a19-46dd-b1b6-6fc96ae283bd"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pick face qty vs inventory qty mismatch]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="10" uuid="6e89a576-bbfc-41d2-b793-9e65b48df456"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="10" uuid="923d741c-2175-44f9-83dc-fea2ffc4aadd"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[LOCATION_ZONE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="10" uuid="8a29cf92-e780-4ef0-82ee-522b978c5570"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PICK_FACE_QTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="10" uuid="4a258750-3745-4ea0-be0e-5ff1550ac510"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[INVENTORY_QTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="100" height="10" uuid="ccd19e8a-c94e-4b66-b394-a2b12270dc48"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[QTY_MISMATCH]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="10" uuid="1813db7a-32b4-45be-bd23-8939718a5b44"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="10" uuid="a00304a3-cc84-4403-9c18-be36868691f9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCATION_ZONE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="10" uuid="db8f86e5-66c0-473e-b8d0-309c86a11835"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PICK_FACE_QTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="10" uuid="65598017-2049-4ddd-aa85-88e5db8dfce3"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INVENTORY_QTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="100" height="10" uuid="51320f4d-c808-4f43-8957-9ff8e2988a8e"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_MISMATCH}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

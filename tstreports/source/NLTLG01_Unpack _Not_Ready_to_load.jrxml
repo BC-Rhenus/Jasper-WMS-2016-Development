@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Unpack _Not_Ready_to_load" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="51396e19-0764-427e-b087-a5fc4b5f38a4">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<parameter name="pallet_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select oc.order_id, oc.container_id, Pallet_id
+,(Select consignment From dcsdba.order_header where oc.order_id = order_id)consignment
+From DCSDBA.Order_Container oc where oc.order_id in
+(
+Select distinct mt.Task_Id From dcsdba.move_task mt
+where mt.task_id in
+(
+Select oh.order_id From dcsdba.order_header oh
+where oh.order_id in (Select order_id From dcsdba.order_container where pallet_id = $P{pallet_id})
+and oh.status != 'Ready to Load'
+)
+and mt.from_loc_id not in (select location_id from dcsdba.location where zone_1 like '%DS%DOCK')
+)
+and pallet_id = $P{pallet_id}
+order by oc.order_id, consignment, oc.container_id]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORDER_ID"/>
+	</field>
+	<field name="CONTAINER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONTAINER_ID"/>
+	</field>
+	<field name="CONSIGNMENT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONSIGNMENT"/>
+	</field>
+	<field name="PALLET_ID" class="java.lang.String"/>
+	<group name="ORDER_ID">
+		<groupExpression><![CDATA[$F{ORDER_ID}]]></groupExpression>
+	</group>
+	<group name="CONSIGNMENT">
+		<groupExpression><![CDATA[$F{CONSIGNMENT}]]></groupExpression>
+	</group>
+	<group name="CONTAINER_ID">
+		<groupExpression><![CDATA[$F{CONTAINER_ID}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="120" y="-3" width="310" height="32" uuid="cd5cd495-4f84-46e6-b2fe-1a72c7d24e86"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unpack_Not_Ready_to_Load]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="33">
+			<staticText>
+				<reportElement x="152" y="0" width="108" height="22" uuid="617b8026-0ec5-4e4d-93e8-4435e819e386"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[From Pallet_ID:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="261" y="1" width="100" height="20" uuid="5a31485e-51d9-4ed6-b0d2-dcb301bd45fe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pallet_id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="59" y="0" width="100" height="20" uuid="5cd8b36f-5317-42b7-a0e1-e7e898eca120">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="709bd064-ac9f-43e4-88bc-e2097578b7de"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="232" y="0" width="100" height="20" uuid="46f7d69a-08a3-4770-872c-9d53e032c5d1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d4d3948f-cdb8-4f93-8080-7f634896bdb0"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTAINER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="0" width="100" height="20" uuid="82445b60-ec48-45b2-9c61-530181ff0b7c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd957514-0632-4cc9-a561-302d58934cef"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSIGNMENT]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="58" y="1" width="100" height="20" uuid="eb686c0e-b268-4f2d-a5a2-8a7845e53ecc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="709bd064-ac9f-43e4-88bc-e2097578b7de"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="232" y="1" width="100" height="20" uuid="f4023559-5eef-491b-b158-2ec94fcf2bd2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d4d3948f-cdb8-4f93-8080-7f634896bdb0"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="1" width="100" height="20" uuid="6cf8273e-f4ec-4aba-9327-a24b3d404d21">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd957514-0632-4cc9-a561-302d58934cef"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CONSIGNMENT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="16" width="560" height="1" uuid="e0cace1d-466d-4d64-a48b-98fc2d926e5b"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

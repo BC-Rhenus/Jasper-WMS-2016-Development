@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NLTLG01_Pallet_Loading_check" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="832" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="3c30259d-5e23-471a-b23b-0eb78de9b582">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="245"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="748"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="pallet_id" class="java.lang.String"/>
+	<parameter name="status" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select distinct t1.task_id as TASK_ID, 
+		        t1.Consignment, 
+		        t1.order_header_status,
+                (select status from dcsdba.order_container where mt.pallet_id = pallet_id and order_id = mt.task_id and mt.container_id = container_id) Container_status,
+                mt.pallet_id, 
+                mt.container_id, 
+                Mt.From_Loc_Id, 
+                Mt.To_Loc_Id, 
+                Mt.Final_Loc_Id, 
+               (Mt.Status) task_status 
+From 
+
+   (
+   Select Distinct 
+                  mt.task_id, 
+                  Oh.Consignment, 
+                  (oh.status) order_header_status, 
+                  (Oc.Status) Container_status,
+                  mt.container_id, 
+                  Mt.From_Loc_Id, 
+                  Mt.To_Loc_Id, 
+                  Mt.Final_Loc_Id, 
+                  (Mt.Status) task_status, 
+                  L.Check_String 
+     From DCSDBA.Order_Container oc
+                 inner join dcsdba.move_task mt on mt.task_id = oc.order_id and mt.container_id = oc.container_id
+                 inner join dcsdba.order_header oh  on oh.order_id = oc.order_id and oh.status = nvl($P{status}, oh.status)
+                 inner join dcsdba.location l on l.location_id = Mt.from_Loc_Id
+     where mt.pallet_id in ($P{pallet_id})
+     ) t1
+inner join dcsdba.move_task mt
+on mt.task_id = t1.task_id 
+order by t1.task_id]]>
+	</queryString>
+	<field name="TASK_ID" class="java.lang.String"/>
+	<field name="Consignment" class="java.lang.String"/>
+	<field name="Order_header_status" class="java.lang.String"/>
+	<field name="Container_status" class="java.lang.String"/>
+	<field name="Pallet_ID" class="java.lang.String"/>
+	<field name="Container_ID" class="java.lang.String"/>
+	<field name="From_Loc_ID" class="java.lang.String"/>
+	<field name="To_Loc_Id" class="java.lang.String"/>
+	<field name="Final_Loc_Id" class="java.lang.String"/>
+	<field name="Task_Status" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+		</band>
+	</background>
+	<title>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="290" y="2" width="330" height="29" uuid="ce9de690-a33a-4ffe-87eb-5b9ad31468f0"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NLTLG01_Pallet_Loading_check]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="7" y="0" width="106" height="25" uuid="eb71c1a6-5b1f-4f75-948e-e379143709e8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a7b54105-7d2e-414a-8962-884e76fa1ec1"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TASK_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="0" width="66" height="25" uuid="bf54f9fb-3dde-420e-a968-2459907bdca0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1eb61255-0f7b-45cc-98d1-75b55a07d693"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consignment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="0" width="76" height="36" uuid="f232a349-8286-4835-8049-d6ddbabcf29d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6dfe1d43-67d7-473d-8bf7-bcd3f0631038"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order_header_status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="263" y="0" width="50" height="36" uuid="108e27af-8faa-48de-8e81-fb3a524d37cc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5b04f2e-bf56-4b3d-9541-f4907712b744"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Container_status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="0" width="60" height="25" uuid="c7a0ae06-c863-4470-b3c9-ddcfc77a14ce">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f430a729-024f-44eb-b163-4dcfa89ddaea"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pallet_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="428" y="0" width="66" height="25" uuid="19a83df6-2569-4b29-aa51-7b906c4cb2e9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f07a38f4-2cbd-4ed3-80bf-7e737f323180"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Container_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="496" y="0" width="72" height="25" uuid="78c32d36-f625-4f12-8c97-03bb497cdb20">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="34486db1-480e-4a4c-993b-ab2c34fa1f24"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[From_Loc_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="586" y="0" width="70" height="25" uuid="8c54f99c-077e-41ce-b459-f0b5d58148d3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1b72f42a-2cb4-4273-b422-262fea9bbe5a"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[To_Loc_Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="70" height="25" uuid="ec792eb6-e9cc-4aab-87d7-43528b2cc05f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="34bc2096-c2ad-430c-ad6f-b03299113863"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final_Loc_Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="761" y="0" width="76" height="25" uuid="1d8d0ce1-d03a-4db9-99bd-a3c9588f8688">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="12c946f9-12b9-45b9-b08f-bcd1e687f250"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Task_Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-35" y="36" width="891" height="1" uuid="14a80803-8a80-4176-9da3-08ec21ba8c40"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="7" y="10" width="92" height="18" uuid="19b8c3d9-ee54-4467-aa2b-69f4e39f16a0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a7b54105-7d2e-414a-8962-884e76fa1ec1"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TASK_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="103" y="10" width="66" height="18" uuid="19fd7ae2-d0c8-47a1-8a22-42745fe122a1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1eb61255-0f7b-45cc-98d1-75b55a07d693"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Consignment}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="173" y="10" width="76" height="18" uuid="f0cc582f-aa63-4434-bdb6-78136a18e014">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6dfe1d43-67d7-473d-8bf7-bcd3f0631038"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Order_header_status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="253" y="10" width="80" height="18" uuid="8045eab6-e1e9-4e93-9596-0d3fc15b86c3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5b04f2e-bf56-4b3d-9541-f4907712b744"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Container_status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="348" y="10" width="60" height="18" uuid="fb9ca0a2-5988-4b70-bd8b-9d1b7c35113f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f430a729-024f-44eb-b163-4dcfa89ddaea"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Pallet_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="428" y="10" width="66" height="18" uuid="213ba2d7-adf8-48a0-ab21-e96fa94c0fdf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f07a38f4-2cbd-4ed3-80bf-7e737f323180"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Container_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="496" y="10" width="72" height="18" uuid="9763e9c5-a0e3-438c-a588-26d800392a4d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="34486db1-480e-4a4c-993b-ab2c34fa1f24"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{From_Loc_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="586" y="10" width="70" height="18" uuid="2501f6b3-8076-43e2-820e-d5cdd438b005">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1b72f42a-2cb4-4273-b422-262fea9bbe5a"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{To_Loc_Id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="10" width="70" height="18" uuid="3f7b1d9b-6ba3-4a0b-8b11-f5ad7565ebf5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="34bc2096-c2ad-430c-ad6f-b03299113863"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Final_Loc_Id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="756" y="10" width="80" height="18" uuid="54f6f022-930e-4b9b-bd94-0d16dbfdad28">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="12c946f9-12b9-45b9-b08f-bcd1e687f250"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Task_Status}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="29" width="836" height="1" uuid="8c39064d-f7a7-433e-9610-714e48398ac1"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

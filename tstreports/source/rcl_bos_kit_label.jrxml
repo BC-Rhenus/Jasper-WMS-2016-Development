@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2022-04-29T16:07:54 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_bos_kit_label" language="groovy" pageWidth="311" pageHeight="481" columnWidth="271" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_PRD"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\tim.grol\\Desktop\\ireport\\MyReports"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="client_id" class="java.lang.String"/>
+	<parameter name="container_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select odh.client_id,odh.order_id,odh.purchase_order,odh.order_reference
+,odl.host_line_id,odl.sku_id,odl.customer_sku_id,odl.customer_sku_desc1,odl.min_qty_ordered,odl.user_def_type_2,sku.description
+,to_char(sysdate,'DD-MON-YYYY') printdate
+from dcsdba.order_container ocr
+inner join dcsdba.order_header odh on ocr.order_id=odh.order_id and ocr.client_id=odh.client_id
+inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id and nvl(odl.user_def_type_3,'N')='XB'
+inner join dcsdba.sku sku on odl.sku_id=sku.sku_id and odl.client_id=sku.client_id
+where ocr.client_id=$P{client_id}
+and ocr.container_id=$P{container_id}]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="PURCHASE_ORDER" class="java.lang.String"/>
+	<field name="ORDER_REFERENCE" class="java.lang.String"/>
+	<field name="HOST_LINE_ID" class="java.lang.String"/>
+	<field name="CUSTOMER_SKU_ID" class="java.lang.String"/>
+	<field name="CUSTOMER_SKU_DESC1" class="java.lang.String"/>
+	<field name="MIN_QTY_ORDERED" class="java.math.BigDecimal"/>
+	<field name="USER_DEF_TYPE_2" class="java.lang.String"/>
+	<field name="PRINTDATE" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<pageHeader>
+		<band height="54" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="16" width="100" height="16" uuid="4c7643b9-6ec2-4ea7-9b08-265e9f974da0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Your Reference:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="16" uuid="da30d83e-0975-4f13-ad29-9ff34275dce2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="16" width="170" height="16" uuid="4a153e10-5a2a-4db8-926f-7b8d28eaada0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PURCHASE_ORDER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="170" height="16" uuid="1cb038d9-5ff2-4aa6-bd35-d7a8d5f64c06">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="51" width="270" height="1" uuid="d5cc5332-0684-4742-a795-27b9b6c80d12">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="53" width="270" height="1" uuid="e0af006b-854d-49a3-a39e-d86316342de9">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="32" width="100" height="16" uuid="90ccebca-8436-4d28-9b95-61f73fa62e40">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Our Order:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="32" width="170" height="16" uuid="f9d7b3ce-b61c-4ce2-8512-68141f05df1d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_REFERENCE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="71" splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="39" width="170" height="16" uuid="5eb69bd0-8e64-4105-a451-595509bfb940">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUSTOMER_SKU_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="39" width="100" height="16" uuid="788f85b5-1468-4a1a-8d7f-94afa9a9763d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Material:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="55" width="100" height="16" uuid="b4affd4c-9d61-4b81-b093-945158776414">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="55" width="170" height="16" uuid="243ea807-7210-4491-adac-67ba6cdf2831">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUSTOMER_SKU_DESC1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="7" width="100" height="16" uuid="2986536e-82e1-44c4-92e2-e1806b72e7aa">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Material:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="7" width="170" height="16" uuid="fcd0195c-dc03-4577-b566-408ac2995ae4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="23" width="100" height="16" uuid="4b3b3a66-ff98-43b3-9720-9505da1722c6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantity:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="23" width="170" height="16" uuid="5b26abc2-2274-41f6-bc24-a2cc54ee26e0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MIN_QTY_ORDERED}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="19">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="0" y="2" width="270" height="1" uuid="2b0d67b8-455f-43e3-893c-5e5784b488c1">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="171" y="3" width="99" height="16" uuid="f5fbc5a4-5267-40fe-9c8d-f20ce87370c5"/>
+				<textElement textAlignment="Right">
+					<font fontName="Swis721 BT" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRINTDATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="3" width="140" height="16" uuid="edfffdd9-84b8-44ee-b79a-5d8ba3efdf3a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Swis721 BT" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bosch Rexroth B.V.]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

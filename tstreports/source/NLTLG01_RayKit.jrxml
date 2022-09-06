@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rym_kit_instr" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a78aada2-9b78-4bc1-a8e6-73d8311f0607">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<parameter name="container_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select  rpad(ohr.order_id,20,' ')                           order_id
+,       substr(nvl(ole.customer_sku_desc2,'No KIT'),1,20)   kit_id
+,       rpad(mtk.sku_id,40,' ')                             
+||      ole.customer_sku_desc1                              sku_desc
+,       mtk.qty_to_move                                     qty
+,       nvl(snr.serial_number,'-')                          serial
+,       mtk.container_id                                    container
+from    dcsdba.order_container     ocr
+,       dcsdba.order_header        ohr
+,       dcsdba.order_line          ole
+,       dcsdba.move_task           mtk
+,       dcsdba.serial_number       snr
+,       (
+        select  client_id
+        ,       order_id
+        from    dcsdba.order_container
+        where   client_id    in ('FLIRB','FLIRS') and   
+		container_id = $P{container_id}
+        )   oc1
+where   oc1.client_id       = ocr.client_id
+and     oc1.order_id        = ocr.order_id
+and     ocr.client_id       = ole.client_id
+and     ocr.order_id        = ole.order_id
+and     ocr.client_id       = ohr.client_id
+and     ocr.order_id        = ohr.order_id
+and     mtk.client_id       = ole.client_id
+and     mtk.task_id         = ole.order_id
+and     mtk.line_id         = ole.line_id
+and     mtk.container_id    = ocr.container_id
+and     mtk.task_type       = 'O'                   -- Repack
+and     mtk.client_id       = snr.client_id (+)
+and     mtk.task_id         = snr.order_id (+)
+and     mtk.line_id         = snr.line_id (+)
+and     mtk.sku_id          = snr.sku_id (+)
+and     mtk.tag_id          = snr.tag_id (+)
+and     mtk.container_id    = snr.container_id (+)
+order   by order_id
+,       ole.customer_sku_desc2 nulls last
+,       sku_desc
+,       qty
+,       serial nulls last
+,       container]]>
+	</queryString>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="KIT_ID" class="java.lang.String"/>
+	<field name="SKU_DESC" class="java.lang.String"/>
+	<field name="QTY" class="java.math.BigDecimal"/>
+	<field name="SERIAL" class="java.lang.String"/>
+	<field name="CONTAINER" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement x="305" y="-8" width="180" height="30" uuid="f035f16c-1311-4e7e-82cd-a02815343e6c"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Kit Instructions"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="12" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="6" width="100" height="24" uuid="759b317c-7116-4600-bffe-0b5f18d55fdf"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="6" width="100" height="24" uuid="3500076b-c7f3-4854-9ee1-9e19425ce18e"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KIT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="6" width="100" height="24" uuid="54f8dc52-4519-4b15-ac16-2686f51d1053"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU_DESC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="6" width="100" height="24" uuid="47300ddb-ddca-4206-8496-5e888e51a524"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="570" y="6" width="100" height="24" uuid="73c6417c-1493-41b9-bedf-11e5bcd79b6c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERIAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="700" y="6" width="100" height="24" uuid="e58944b5-04e6-4957-9dfd-7be9389cb8b2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTAINER]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="70" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="36" width="100" height="30" uuid="c7221550-c06b-45db-9a15-1eee67187256"/>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="36" width="100" height="24" uuid="8de3d2b4-4208-406d-a3f8-62c9ec2a9e85"/>
+				<textFieldExpression><![CDATA[$F{KIT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="36" width="130" height="30" uuid="82cc49ec-209a-4357-a14f-daf7dbeb6e17"/>
+				<textFieldExpression><![CDATA[$F{SKU_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="36" width="100" height="30" uuid="79633783-a307-41dc-9979-36f22f81438c"/>
+				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="570" y="36" width="100" height="30" uuid="15572d02-dedf-4ee7-8f0d-3f112f1b2545"/>
+				<textFieldExpression><![CDATA[$F{SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="700" y="36" width="100" height="30" uuid="fca3ec58-8461-4a3d-b834-e24cb00b89e7"/>
+				<textFieldExpression><![CDATA[$F{CONTAINER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="-20" y="-49" width="846" height="1" isPrintInFirstWholeBand="true" uuid="a99716db-b945-4da1-99a1-8a5308719e21"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="-21" y="5" width="846" height="1" isPrintInFirstWholeBand="true" uuid="8894fe63-1c03-4bcf-99a8-bbe5a9c8dfcc"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,12 @@
+Sep 5, 2022 12:00:24 AM - ALWAYS: 
+Sep 5, 2022 12:00:24 AM - ALWAYS: ==========================================================================================================
+Sep 5, 2022 12:00:24 AM - ALWAYS: 
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDae: -o /home/tstdba/tmp/TSTCNLJW/BillingInterfaceDae.log -m /home/tstdba/xml/WMSInterfaceMapping.xml -m /home/tstdba/xml/WMSInterfaceMapping.xml -s dehze01-lsv365_TSTCNLJW -p dcsdba/dcsabd -b dehze01-lsv365_TSTCNLJW -a dcsdba/dcsabd -u RCL-WMS -y RCL-WMS -1 -f -o /home/tstdba/reports/tpb/billinginterfacedaemon.log -x (trunc(ab_dtransaction.end_dstamp)<trunc(sysdate)) -L 3
+Sep 5, 2022 12:00:24 AM - ALWAYS: 
+Sep 5, 2022 12:00:24 AM - ALWAYS: ==========================================================================================================
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDaeUsing Default Target Table Name[AB_BASE_TRANS]
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDaeUsing Default Source Table Name[AB_DTRANSACTION]
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDaeUsing Default UPLOADED Column[UPLOADED]
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDaeUsing Default KEY Column[KEY]
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDaeUsing Default OWNER Column[OWNER_ID]
+Sep 5, 2022 12:00:24 AM - ALWAYS: BillingInterfaceDaeUsing Default CLIENT Column[CLIENT_ID]

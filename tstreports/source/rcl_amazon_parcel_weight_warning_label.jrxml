@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2022-08-17T14:00:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_amazon_parcel_weight_warning_label" language="groovy" pageWidth="311" pageHeight="481" columnWidth="271" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_ACC"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\tim.grol\\Desktop\\ireport\\MyReports"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="client_id" class="java.lang.String"/>
+	<parameter name="container_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select client_id,container_id,sum(nr_units) total_units from (
+select client_id,container_id,sku_id,floor(qty_on_hand/obx_qty) nr_units from (
+select ocr.client_id,ocr.container_id,inv.sku_id,inv.qty_on_hand
+,(case when pck.rdt_track_level_4='.O' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4)
+when pck.rdt_track_level_3='.O' then (pck.ratio_1_to_2*pck.ratio_2_to_3)
+when pck.rdt_track_level_2='.O' then (pck.ratio_1_to_2)
+when pck.rdt_track_level_1='.O' then 1
+else 1 end) obx_qty
+from dcsdba.order_container ocr
+inner join dcsdba.inventory inv on ocr.container_id=inv.container_id and ocr.client_id=inv.client_id
+inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+inner join dcsdba.sku_config pck on inv.config_id=pck.config_id and inv.client_id=pck.client_id
+where ocr.client_id=$P{client_id}
+and ocr.container_id=$P{container_id}
+and ocr.container_type is not null
+and nvl(ocr.container_weight,1)>16
+)
+) group by client_id,container_id
+having sum(nr_units)=1]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="TOTAL_UNITS" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="281" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="270" height="50" uuid="8c421e98-c572-4c00-a038-55fb026bac02">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="Swis721 BT" size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAUTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="210" width="270" height="50" uuid="e665e301-669d-4fb2-a28d-0492ad60c4ce">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Swis721 BT" size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HEAVY]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="50" width="270" height="1" uuid="6415568d-5069-4f95-a1fb-0971aee0920c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="2" y="260" width="270" height="1" uuid="acdfb61b-e9e9-48e4-b0b1-6881a2bfe00a">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="2" y="260" width="269" height="16" uuid="61ff41d2-0482-4a1f-bf3b-0187797f5222">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Swis721 BT" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{container_id}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="210" width="270" height="1" uuid="a6d43311-72e5-44b6-a028-d4fc99c68de3">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="270" y="50" width="1" height="161" uuid="ea85ad40-9daa-4e7f-a4e7-94d5bd657c8c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="50" width="1" height="161" uuid="5fa19246-c5d9-43b7-a626-24204c252fad">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="90" width="270" height="80" uuid="306d19bb-3982-4035-a300-965b30e1e828">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="Swis721 BT" size="48" isBold="true"/>
+				</textElement>
+				<text><![CDATA[+15kg]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</detail>
+	<columnFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

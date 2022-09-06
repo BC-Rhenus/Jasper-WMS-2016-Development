@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CargoPlanner2022v1" pageWidth="3900" pageHeight="500" columnWidth="3900" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="6ba8d401-b9e7-4e4d-b27f-1fe0fe6c5adc">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016ACC"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="209"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="785"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<parameter name="order_id" class="java.lang.String"/>
+	<parameter name="consignment" class="java.lang.String"/>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\tim.grol\\Desktop\\ireport\\MyReports"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select distinct ODH.CLIENT_ID, odh.ORDER_ID, odh.CONSIGNMENT, ODH.ORDER_REFERENCE, CON.PALLET_ID, CON.CONFIG_ID, 
+(100*CON.PALLET_WIDTH) as PLT_WIDTH, 
+(100*CON.PALLET_DEPTH) as PLT_DEPTH, 
+(100*CON.PALLET_HEIGHT) as PLT_HEIGHT, 
+CON.PALLET_WEIGHT,
+'1' as PLT_QUANTITY
+,(case when exists (select distinct 1 from DCSDBA.INVENTORY_TRANSACTION ITR inner join DCSDBA.ORDER_LINE odl on itr.reference_ID=odl.order_ID and itr.line_ID = odl.line_ID and itr.client_ID = odl.client_ID 
+where itr.code ='Pick' and itr.pallet_ID = con.pallet_ID and itr.container_ID = con.container_id and itr.reference_id = con.order_ID and itr.client_ID = con.client_id and odl.user_def_type_2 = 'C' and rownum = 1)
+then 'C' else null end) as COMPONENT_in_PLT
+,(case when con.config_id like 'CRAT%' then 'YES' else 'NO' end) as IS_STACKABLE,
+(case when CON.PALLET_WEIGHT > 800 then 'YES' else 'NO' end) as ON_BOTTOM,
+'NO' as IS_Tiltable,
+'NO' as IS_Longship 
+from DCSDBA.ORDER_HEADER ODH inner join DCSDBA.ORDER_CONTAINER CON on ODH.CLIENT_ID = CON.CLIENT_ID and ODH.ORDER_ID = CON.ORDER_ID
+where odh.client_ID = $P{client_id} and odh.status = 'Ready to Load' and (($P{order_id} is null or odh.order_ID =  $P{order_id})  and ($P{consignment} is null or odh.consignment =  $P{consignment}))]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENT_ID"/>
+	</field>
+	<field name="ORDER_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORDER_ID"/>
+	</field>
+	<field name="CONSIGNMENT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONSIGNMENT"/>
+	</field>
+	<field name="ORDER_REFERENCE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORDER_REFERENCE"/>
+	</field>
+	<field name="PALLET_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PALLET_ID"/>
+	</field>
+	<field name="CONFIG_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONFIG_ID"/>
+	</field>
+	<field name="PLT_WIDTH" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PLT_WIDTH"/>
+	</field>
+	<field name="PLT_DEPTH" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PLT_DEPTH"/>
+	</field>
+	<field name="PLT_HEIGHT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PLT_HEIGHT"/>
+	</field>
+	<field name="PALLET_WEIGHT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PALLET_WEIGHT"/>
+	</field>
+	<field name="PLT_QUANTITY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PLT_QUANTITY"/>
+	</field>
+	<field name="COMPONENT_IN_PLT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COMPONENT_IN_PLT"/>
+	</field>
+	<field name="IS_STACKABLE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="IS_STACKABLE"/>
+	</field>
+	<field name="ON_BOTTOM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ON_BOTTOM"/>
+	</field>
+	<field name="IS_TILTABLE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="IS_TILTABLE"/>
+	</field>
+	<field name="IS_LONGSHIP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="IS_LONGSHIP"/>
+	</field>
+	<sortField name="CONSIGNMENT"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="120" height="15" uuid="0cd92815-68c6-4103-910e-9c6bb5a71420">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="120" height="15" uuid="fdc57d2b-59c3-4366-9d32-ae1f93155ee5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="120" height="15" uuid="47e49edf-2472-40a1-9300-2a0243f67b68">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[ORDER_REFERENCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="0" width="120" height="15" uuid="6a11cdd2-88f9-49d5-9efe-025a45f75737">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="80" height="15" uuid="7ca3e6e1-ae57-401e-8658-cff2a7c533cf">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[CONFIG_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="560" y="0" width="80" height="15" uuid="ba881b91-d56e-4fc6-849e-376c6d2e4c37">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[PLT_WIDTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="640" y="0" width="80" height="15" uuid="4a61c36a-0a13-46af-9de9-c369d2484beb">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[PLT_LENGTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="720" y="0" width="80" height="15" uuid="9fac503e-dc3e-4778-8f57-872b3f732ac8">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[PLT_HEIGHT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="960" y="0" width="80" height="15" uuid="7afea778-af07-43bf-b31a-147c533fa5f1">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[GROUP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1120" y="0" width="80" height="15" uuid="e61b778f-0cb7-4769-a988-18cd8bf095ad">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[IS_STACKABLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1200" y="0" width="80" height="15" uuid="725b36ed-8fe9-4e4a-9909-e61407c6ac3b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[ON_BOTTOM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="800" y="0" width="80" height="15" uuid="2ae79c9e-887d-4128-9496-622474c73124">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[PLT_WEIGHT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="880" y="0" width="80" height="15" uuid="35d4cc32-5855-4d6d-809a-09ff47ad0bfc">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[PLT_QUANTITY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1040" y="0" width="80" height="15" uuid="00b1a014-4be5-4d18-bd3d-dcb0450eea78">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[PRIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1280" y="0" width="80" height="15" uuid="340a9919-e918-4397-98b9-3c6c054b576c">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[IS_TILTABLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1360" y="0" width="80" height="15" uuid="8a81545e-febb-4530-a137-e3bc38b39a0e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[IS_LONGSHIP]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="0" y="0" width="120" height="15" uuid="07f967b2-4cf7-4400-be7c-d7c2ec8ac6a7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="120" y="0" width="120" height="15" uuid="07bcc5bd-d624-41d1-b4a2-c4109d31d240">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="240" y="0" width="120" height="15" uuid="f0e7b2c6-26c9-4828-a5fa-9adc0c848afd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ORDER_REFERENCE}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="360" y="0" width="120" height="15" uuid="a9d4c50c-9840-4e9d-a38c-8068c1790532">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="80" height="15" uuid="36023939-eae1-476d-aecb-58a6b8a86bb7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CONFIG_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="560" y="0" width="80" height="15" uuid="f7a0251d-9dc3-43b6-b54f-f6c356d61730">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PLT_WIDTH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="0" width="80" height="15" uuid="48631c2b-afb1-4fdf-9035-d4c100909f6c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PLT_DEPTH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="720" y="0" width="80" height="15" uuid="d522cc91-1dfd-45fc-8dd2-9662e5c044dd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PLT_HEIGHT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="960" y="0" width="80" height="15" uuid="40e6b11e-c691-4d6b-8cd7-8ebaeff2601b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{COMPONENT_IN_PLT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1120" y="0" width="80" height="15" uuid="ce7fc02b-1141-40ce-a5a8-7d39dd56d7c9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{IS_STACKABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1200" y="0" width="80" height="15" uuid="e2f2b12c-283d-4148-bc67-93e933b67125">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ON_BOTTOM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="800" y="0" width="80" height="15" uuid="a27366c6-4e4a-4f88-b274-b984b3ab0722">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PALLET_WEIGHT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="880" y="0" width="80" height="15" uuid="55f5f9fd-e1a7-4bba-9bf7-04ef64b08466">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PLT_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1040" y="0" width="80" height="15" uuid="b35c8957-dc91-4d9c-8880-653da7fab534">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{COMPONENT_IN_PLT}.equalsIgnoreCase( "C" ) ? "1" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1280" y="0" width="80" height="15" uuid="96e06341-7db2-4165-8b07-cb44af485511"/>
+				<textFieldExpression><![CDATA[$F{IS_TILTABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1360" y="0" width="80" height="15" uuid="d4788406-be09-4b2e-b639-1cb3bc464496"/>
+				<textFieldExpression><![CDATA[$F{IS_LONGSHIP}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

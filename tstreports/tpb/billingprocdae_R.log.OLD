@@ -1,0 +1,33 @@
+[Fri Sep  4 14:26:23 2020] Command Invocation: billingprocdae -A R -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/prddba/reports/tpb/billingprocdae_R.log -L 3 -Z Europe/Amsterdam 
+[Fri Sep  4 14:26:23 2020] BC Transaction Processing daemon - Succesfully connected to server
+[Fri Sep  4 14:26:23 2020] day_of_week_specified 0
+[Fri Sep  4 14:26:23 2020] day_of_week 1
+[Fri Sep  4 14:26:23 2020] curr_day_of_week 5
+[Fri Sep  4 14:26:23 2020] current_time 51983
+[Fri Sep  4 14:26:23 2020] action_time 7200
+[Fri Sep  4 14:26:23 2020] current_date 44172
+[Fri Sep  4 14:26:23 2020] last_update 44172
+[Fri Sep  4 14:26:23 2020] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Fri Sep  4 14:26:23 2020] Process Transactions
+[Fri Sep  4 14:26:23 2020] ====================
+[Fri Sep  4 14:26:23 2020] Daemon Type         [ALL]
+[Fri Sep  4 14:26:23 2020] SLA Type            [PRICE]
+[Fri Sep  4 14:26:23 2020] Client              [R]
+[Fri Sep  4 14:26:23 2020] Blanket Contract    []
+[Fri Sep  4 14:26:23 2020] Contract            []
+[Fri Sep  4 14:26:23 2020] Term                []
+[Fri Sep  4 14:26:23 2020] Invoice Group       []
+[Fri Sep  4 14:26:23 2020] Rule                []
+[Fri Sep  4 14:26:23 2020] Use Scheduling      [Y]
+[Fri Sep  4 14:26:23 2020] Include Prior       [Y]
+[Fri Sep  4 14:26:23 2020] Include Processed   [N]
+[Fri Sep  4 14:26:23 2020] Include NoRuleFound [N]
+[Fri Sep  4 14:26:23 2020] MarkNORULEFOUNDOnFly[N]
+[Fri Sep  4 14:26:23 2020] MarkNORULEFOUNDOnly [N]
+[Fri Sep  4 14:26:23 2020] Commit Size         [1000]
+[Fri Sep  4 14:26:23 2020] Email Address       [tim.grol@nl.rhenus.com]
+[Fri Sep  4 14:26:23 2020] Email Level         [1]
+[Fri Sep  4 14:26:23 2020] Time Zone           [Europe/Amsterdam]
+[Fri Sep  4 14:26:23 2020] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Fri Sep  4 14:26:23 2020] BC Transaction Processing daemon - Disconnected from server
+

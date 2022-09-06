@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2022-02-11T10:03:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Centiro_label_error_report" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d8382cb1-8a20-40bf-9a42-b41ec2c6451c">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<parameter name="client_id" class="java.lang.String">
+		<parameterDescription><![CDATA[client_id]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="site_id" class="java.lang.String">
+		<parameterDescription><![CDATA[site_id]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="order_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select	client_id
+,	order_id
+,	country
+,	to_char(ship_by_date,'dd-mm-yy hh24:mi') as ship_by_date
+,	status
+,	UN_CLASS
+,	UN_DESC	
+,	UN_CODE
+,	CTO_TYPE	
+,	UN_PACK_GRP
+,	UN_PACK_INSTR
+,	UN_ACCESSIBILITY
+,	sku_id
+,	container_id
+,	pallet_id
+,	qty * each_weight as gross_weight
+from	(
+	select	client_id
+	,	order_id
+	,	country
+	,	ship_by_date
+	,	status
+	,	hazmat_class 	UN_CLASS
+	,	notes		UN_DESC	
+	,	user_def_type_1	UN_CODE
+	,	user_def_type_2 CTO_TYPE	
+	,	user_def_type_3	UN_PACK_GRP
+	,	user_def_type_4	UN_PACK_INSTR
+	,	user_def_type_5	UN_ACCESSIBILITY
+	,	sku_id
+	,	container_id
+	,	pallet_id
+	,	each_weight
+	,	sum(qty) qty
+	from	(
+		select	distinct 
+			o.client_id
+		,	o.order_id
+		,	o.country
+		,	o.ship_by_date
+		,	o.status
+		,	s.hazmat_id
+		,	s.each_weight
+		, 	( select t.hazmat_class from dcsdba.hazmat_hazmat_class t where t.hazmat_id = h.hazmat_id and rownum = 1)  hazmat_class
+		,	h.notes
+		,	h.user_def_type_1
+		,	h.user_def_type_2
+		,	h.user_def_type_3
+		,	h.user_def_type_4
+		,	h.user_def_type_5
+		,	i.sku_id
+		,	i.container_id
+		,	i.pallet_id
+		,	i.qty_on_hand qty
+		from	dcsdba.order_header	o
+		inner
+		join	dcsdba.order_line 	l
+		on	o.order_id 		= l.order_id
+		and	o.client_id 		= l.client_id
+		inner
+		join	dcsdba.sku		s
+		on	s.client_id 		= l.client_id
+		and	s.sku_id		= l.sku_id
+		and	s.hazmat 		= 'Y'
+		inner
+		join	dcsdba.hazmat		h
+		on	h.hazmat_id		= s.hazmat_id
+		and     h.user_def_type_1       is not null
+		and     h.user_def_type_2       is not null
+		inner
+		join	dcsdba.order_container 	c
+		on	c.order_id 		= o.order_id
+		and	c.client_id		= o.client_id
+		and	(c.labelled = 'Y' or c.pallet_labelled = 'Y')
+		inner
+		join	dcsdba.inventory i
+		on	i.pallet_id 		= c.pallet_id
+		and	i.container_id 		= c.container_id
+		and	i.client_id		= o.client_id
+		and	i.sku_id		= s.sku_id
+		where	(	o.order_id	= $P{order_id}
+					or	$P{order_id}	is null
+			)
+		and	(	o.from_site_id	= $P{site_id}
+			or	$P{site_id}	is null
+			)
+		and	(	o.client_id	= $P{client_id}
+			or	$P{client_id}	is null
+			)
+		union
+		select	distinct 
+			o.client_id
+		,	o.order_id
+		,	o.country
+		,	o.ship_by_date
+		,	o.status
+		,	s.hazmat_id
+		,	s.each_weight
+		, 	( select t.hazmat_class from dcsdba.hazmat_hazmat_class t where t.hazmat_id = h.hazmat_id and rownum = 1)  hazmat_class
+		,	h.notes
+		,	h.user_def_type_1
+		,	h.user_def_type_2
+		,	h.user_def_type_3
+		,	h.user_def_type_4
+		,	h.user_def_type_5
+		,	m.sku_id
+		,	m.pallet_id
+		,	m.container_id
+		,	m.qty_shipped qty
+		from	dcsdba.order_header	o
+		inner
+		join	dcsdba.order_line 	l
+		on	o.order_id 		= l.order_id
+		and	o.client_id 		= l.client_id
+		inner
+		join	dcsdba.sku		s
+		on	s.client_id 		= l.client_id
+		and	s.sku_id		= l.sku_id
+		and	s.hazmat 		= 'Y'
+		inner
+		join	dcsdba.hazmat		h
+		on	h.hazmat_id		= s.hazmat_id
+		and     h.user_def_type_1       is not null
+		and     h.user_def_type_2       is not null
+		inner
+		join	dcsdba.shipping_manifest m
+		on	m.order_id 		= o.order_id
+		and	m.client_id		= o.client_id
+		and	(m.labelled = 'Y' or m.pallet_labelled = 'Y')
+		and	m.sku_id 		= s.sku_id
+		where	(		o.order_id	= $P{order_id}
+						or	$P{order_id}	is null
+						)
+		and			(		o.from_site_id	= $P{site_id}
+						or	$P{site_id}	is null
+						)
+		and			(		o.client_id	= $P{client_id}
+						or	$P{client_id}	is null
+						)
+		)
+	group 
+	by	client_id
+	,	order_id
+	,	country
+	,	ship_by_date
+	,	status
+	,	hazmat_class
+	,	notes	
+	,	user_def_type_1
+	,	user_def_type_2
+	,	user_def_type_3
+	,	user_def_type_4
+	,	user_def_type_5
+	,	sku_id
+	,	container_id
+	,	pallet_id
+	,	each_weight
+	)
+]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="COUNTRY" class="java.lang.String"/>
+	<field name="SHIP_BY_DATE" class="java.lang.String"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="UN_CLASS" class="java.lang.String"/>
+	<field name="UN_DESC" class="java.lang.String"/>
+	<field name="UN_CODE" class="java.lang.String"/>
+	<field name="CTO_TYPE" class="java.lang.String"/>
+	<field name="UN_PACK_GRP" class="java.lang.String"/>
+	<field name="UN_PACK_INSTR" class="java.lang.String"/>
+	<field name="UN_ACCESSIBILITY" class="java.lang.String"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="CONTAINER_ID" class="java.lang.String"/>
+	<field name="PALLET_ID" class="java.lang.String"/>
+	<field name="GROSS_WEIGHT" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="20" y="10" width="760" height="44" uuid="cbfe23ad-f397-462e-85e1-104fb76df2f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Centiro parcel DG report"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="-1" y="0" width="70" height="20" uuid="eca77d6d-38a1-43a1-92a1-57dc0116c565"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="1" width="80" height="19" uuid="445c6f2c-b7ca-48f1-aa06-0e68fbca830e"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="1" width="70" height="19" uuid="92a08887-6349-4f78-9bb2-48bd7b97b964"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COUNTRY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="80" height="20" uuid="111f2a4c-98b4-4012-867b-bfa959ae49b0"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SHIP_BY_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="1" width="60" height="19" uuid="63fefc80-b3dd-4089-bab8-dd80dac4628b"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UN CLASS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="80" height="20" uuid="b44ba4ff-e0f2-47cf-b8c0-3f3b790d45b4"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UN_CODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="1" width="70" height="19" uuid="dc71e8e0-f45c-4197-bd82-e3f6c57a89a2"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TYPE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="0" width="70" height="20" uuid="b26f23d3-a9b8-431a-a236-8b688b268cf3"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PACK_GRP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="580" y="0" width="60" height="20" uuid="f27d3642-81ed-4cd3-98e7-1d842a265a89"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PACK_INSTR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="640" y="0" width="80" height="20" uuid="68258e4f-942a-46f6-94a5-4acd8c41d977"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACCESSIBILITY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="720" y="0" width="70" height="20" uuid="d2fc52d6-8a0d-4e97-8ee2-d03de7aeabd5"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GROSS_WEIGHT]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="66" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="70" height="22" uuid="ada1c67b-d17d-4df8-8292-02668afdceef"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="80" height="22" uuid="aae61e43-53ce-461d-a63c-d12713827f52"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="70" height="22" uuid="90b0d636-6e14-4660-accc-588f71374a31"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{COUNTRY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="80" height="22" uuid="e11e2eb1-4a8a-4c72-a912-8d7d493df0d2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SHIP_BY_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="60" height="22" uuid="46b1002a-734a-4407-9fca-151c09815f5f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{UN_CLASS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="22" width="340" height="18" uuid="bd3fd499-cc9d-46a7-b32e-e8f3f99d257a"/>
+				<textFieldExpression><![CDATA[$F{UN_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="80" height="22" uuid="12eb8fb0-fe8e-4c68-834a-a66da02d0b45"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{UN_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="70" height="22" uuid="2db50fe4-322d-4db2-a460-34a518e87ec8"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CTO_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="0" width="70" height="22" uuid="52735c4e-474b-47fa-9a7a-6b40760702c2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{UN_PACK_GRP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="580" y="0" width="60" height="22" uuid="f330a298-45cc-441b-ab8e-e6c4f7fc775b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{UN_PACK_INSTR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="0" width="80" height="22" uuid="5cfc8f1c-37dd-4d40-a644-47394ada709d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{UN_ACCESSIBILITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="720" y="0" width="70" height="22" uuid="e64ccc30-0535-4404-b4ce-c86c1e5ac8c9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{GROSS_WEIGHT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="22" width="100" height="18" uuid="b7efc1f3-0a5d-4d27-9274-62c06fe59f4f"/>
+				<textFieldExpression><![CDATA[$F{CONTAINER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="21" width="100" height="20" uuid="82daab92-8ecc-4d01-be4b-e0b51b8af0c8"/>
+				<textFieldExpression><![CDATA[$F{PALLET_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="22" width="70" height="18" uuid="e4c664da-d9af-436c-83e3-18350db2f5ff"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pallet id"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="22" width="70" height="18" uuid="ae02cf60-ef83-451e-8658-ae5799df39a6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Container id"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="21" width="100" height="21" uuid="155c3a1f-7238-45ba-bc66-7f9753fbe1b9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Description"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

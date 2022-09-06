@@ -1,0 +1,33 @@
+[Mon Nov 25 10:36:47 2019] Command Invocation: billingprocdae -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/accdba/reports/tpb/billingprocdae_ALL.log -L 3 -Z Europe/Amsterdam 
+[Mon Nov 25 10:36:47 2019] BC Transaction Processing daemon - Succesfully connected to server
+[Mon Nov 25 10:36:47 2019] day_of_week_specified 0
+[Mon Nov 25 10:36:47 2019] day_of_week 1
+[Mon Nov 25 10:36:47 2019] curr_day_of_week 1
+[Mon Nov 25 10:36:47 2019] current_time 38207
+[Mon Nov 25 10:36:47 2019] action_time 7200
+[Mon Nov 25 10:36:47 2019] current_date 43889
+[Mon Nov 25 10:36:47 2019] last_update 43889
+[Mon Nov 25 10:36:47 2019] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Mon Nov 25 10:36:47 2019] Process Transactions
+[Mon Nov 25 10:36:47 2019] ====================
+[Mon Nov 25 10:36:47 2019] Daemon Type         [ALL]
+[Mon Nov 25 10:36:47 2019] SLA Type            [PRICE]
+[Mon Nov 25 10:36:47 2019] Client              []
+[Mon Nov 25 10:36:47 2019] Blanket Contract    []
+[Mon Nov 25 10:36:47 2019] Contract            []
+[Mon Nov 25 10:36:47 2019] Term                []
+[Mon Nov 25 10:36:47 2019] Invoice Group       []
+[Mon Nov 25 10:36:47 2019] Rule                []
+[Mon Nov 25 10:36:47 2019] Use Scheduling      [Y]
+[Mon Nov 25 10:36:47 2019] Include Prior       [Y]
+[Mon Nov 25 10:36:47 2019] Include Processed   [N]
+[Mon Nov 25 10:36:47 2019] Include NoRuleFound [N]
+[Mon Nov 25 10:36:47 2019] MarkNORULEFOUNDOnFly[N]
+[Mon Nov 25 10:36:47 2019] MarkNORULEFOUNDOnly [N]
+[Mon Nov 25 10:36:47 2019] Commit Size         [1000]
+[Mon Nov 25 10:36:47 2019] Email Address       [tim.grol@nl.rhenus.com]
+[Mon Nov 25 10:36:47 2019] Email Level         [1]
+[Mon Nov 25 10:36:47 2019] Time Zone           [Europe/Amsterdam]
+[Mon Nov 25 13:27:29 2019] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Mon Nov 25 13:27:29 2019] BC Transaction Processing daemon - Disconnected from server
+

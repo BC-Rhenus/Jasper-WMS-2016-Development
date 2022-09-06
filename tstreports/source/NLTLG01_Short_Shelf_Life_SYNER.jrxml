@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a92a815-2764-411a-81db-f6bbcb876dd6">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<queryString language="SQL">
+		<![CDATA[Select  Sku_id
+,       tag_id
+,       location_id
+,       qty_on_hand
+,       to_char (expiry_dstamp, 'YYYY-MM-DD') Expiry_Date
+from    dcsdba.inventory
+where   client_id = 'SYNER'
+and	expiry_dstamp between sysdate and sysdate+97]]>
+	</queryString>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="TAG_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TAG_ID"/>
+	</field>
+	<field name="LOCATION_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LOCATION_ID"/>
+	</field>
+	<field name="QTY_ON_HAND" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="QTY_ON_HAND"/>
+	</field>
+	<field name="EXPIRY_DATE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="EXPIRY_DATE"/>
+	</field>
+	<group name="EXPIRY_DATE">
+		<groupExpression><![CDATA[$F{EXPIRY_DATE}]]></groupExpression>
+	</group>
+	<group name="LOCATION_ID">
+		<groupExpression><![CDATA[$F{LOCATION_ID}]]></groupExpression>
+	</group>
+	<group name="SKU_ID">
+		<groupExpression><![CDATA[$F{SKU_ID}]]></groupExpression>
+	</group>
+	<group name="TAG_ID">
+		<groupExpression><![CDATA[$F{TAG_ID}]]></groupExpression>
+	</group>
+	<group name="QTY_ON_HAND">
+		<groupExpression><![CDATA[$F{QTY_ON_HAND}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="95" y="2" width="405" height="30" uuid="08aa5d22-22f9-4630-adf8-81cfc31c402d"/>
+				<textElement>
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SYNER Short Shelf Life Inventory]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="111" height="20" uuid="7a95ca75-6cc1-4aa3-8d8b-3d4e87d263ac">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="48c223f9-3a59-48ae-90f8-cc53d686843d"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="0" width="100" height="20" uuid="d92c9508-7581-44b2-a030-27db885b7c77">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="74a6a5df-649c-4e2f-aa52-3b12a5f6d0c3"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TAG_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="0" width="120" height="20" uuid="ab4338ae-1971-4b4b-bb5b-5f0ac213529e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6d31907a-84a9-4dc7-a57d-1a53dd604cfa"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LOCATION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="0" width="100" height="20" uuid="30ee83fe-2114-4a76-90be-87532bd642c9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a939fdc5-47cb-405f-89be-5fda71909fa5"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTY_ON_HAND]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="432" y="0" width="108" height="20" uuid="3a208e8e-8b56-484a-a93c-7ffeaf08535e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="57b6aec8-a37b-447f-8355-e7e2dfc861d3"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXPIRY_DATE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="1" y="0" width="111" height="15" uuid="20a9fbab-2366-4186-99f2-1615ed97b243">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="48c223f9-3a59-48ae-90f8-cc53d686843d"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="0" width="100" height="15" uuid="19e12245-97f6-4f3a-a95d-0d4079ad4824">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="74a6a5df-649c-4e2f-aa52-3b12a5f6d0c3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TAG_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="212" y="0" width="120" height="15" uuid="dfb63ab7-d557-4c57-b1f3-bdef887bb203">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6d31907a-84a9-4dc7-a57d-1a53dd604cfa"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{LOCATION_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="332" y="0" width="100" height="15" uuid="b9433e1d-c530-45f3-9bb1-b94cf9cda2d4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a939fdc5-47cb-405f-89be-5fda71909fa5"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{QTY_ON_HAND}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="432" y="0" width="106" height="15" uuid="fae9f3ea-e40f-4ea5-9998-d424d0b3fbdf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="57b6aec8-a37b-447f-8355-e7e2dfc861d3"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{EXPIRY_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="481" y="1" width="84" height="18" uuid="3de44cba-058b-40cf-911f-d87aa849bc51"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

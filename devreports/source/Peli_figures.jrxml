@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-03-08T17:21:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Peli_figures" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="838d3ebc-b42d-4ee7-9a39-a7c6f44db003">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<parameter name="from_date" class="java.lang.String"/>
+	<parameter name="to_date" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select  'Receipt' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Receipt' and client_id = 'PELI') as  Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Receipt' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select  'Putaway' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Putaway' and client_id = 'PELI') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Putaway' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select  'Relocate' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Relocate' and client_id = 'PELI') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Relocate' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select  'Replenish to Shelf' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Replenish' and client_id = 'PELI' and to_loc_id in (select l.location_id from location l where l.zone_1 in ('HAL3-PFSH','HAL3-PFSL'))) as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Replenish' and client_id = 'PELI' and to_loc_id in (select l.location_id from location l where l.zone_1 in ('HAL3-PFSH','HAL3-PFSL'))) as Total_seconds
+from    dual
+union
+select  'Replenish to other then Shelf' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Replenish' and client_id = 'PELI' and to_loc_id not in (select l.location_id from location l where l.zone_1 in ('HAL3-PFSH','HAL3-PFSL'))) as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Replenish' and client_id = 'PELI' and to_loc_id not in (select l.location_id from location l where l.zone_1 in ('HAL3-PFSH','HAL3-PFSL'))) as Total_seconds
+from    dual
+union
+select  'Pick to Container from HAL3-HB' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Pick' and client_id = 'PELI' and to_loc_id = 'CONTAINER' and from_loc_id in (select location_id from location where work_zone = 'HAL3-HB')) as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Pick' and client_id = 'PELI' and to_loc_id = 'CONTAINER' and from_loc_id in (select location_id from location where work_zone = 'HAL3-HB')) as Total_seconds
+from    dual
+union
+select  'Pick to Container from HAL3-LB' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Pick' and client_id = 'PELI' and to_loc_id = 'CONTAINER' and from_loc_id in (select location_id from location where work_zone != 'HAL3-HB')) as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Pick' and client_id = 'PELI' and to_loc_id = 'CONTAINER' and from_loc_id in (select location_id from location where work_zone != 'HAL3-HB')) as Total_seconds
+from    dual
+union
+select  'Initial Container check' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Container ChkI' and client_id = 'PELI') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Container ChkI' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select  'Secondary Container check' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Container ChkS' and client_id = 'PELI') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Container ChkS' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select  'Secondary Container check' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Container ChkS' and client_id = 'PELI') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Container ChkS' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select  'Repack workgroup PALLET' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Repack' and client_id = 'PELI' and work_group = 'PALLET') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Repack' and client_id = 'PELI' and work_group = 'PALLET') as Total_seconds
+from    dual
+union
+select  'Repack workgroup PARCEL' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Repack' and client_id = 'PELI' and work_group = 'PARCEL') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Repack' and client_id = 'PELI' and work_group = 'PARCEL') as Total_seconds
+from    dual
+union
+select  'Repack other workgroups' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Repack' and client_id = 'PELI' and work_group not in ('PARCEL','PALLET')) as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Repack' and client_id = 'PELI' and work_group not in ('PARCEL','PALLET')) as Total_seconds
+from    dual
+union
+select  'Marshal to Instage Shipdock' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Marshal' and client_id = 'PELI' and to_loc_id like 'IN%') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Marshal' and client_id = 'PELI' and to_loc_id like 'IN%') as Total_seconds
+from    dual
+union
+select  'Marshal to stage or repack' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Marshal' and client_id = 'PELI' and to_loc_id not like 'IN%') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Marshal' and client_id = 'PELI' and to_loc_id not like 'IN%') as Total_seconds
+from    dual
+union
+select  'Vehicle load' as Code
+,       (select count(*) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Vehicle Load' and client_id = 'PELI') as Total
+,       (select sum(elapsed_time) from inventory_transaction where to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY') and code = 'Vehicle Load' and client_id = 'PELI') as Total_seconds
+from    dual
+union
+select 'Z ' || null as code
+,      null as total
+,      null as total_seconds
+from dual
+union
+select  'ZZ results of ' || code as code
+,       count(*) as total
+,       sum(elapsed_time) as total_seconds
+from    inventory_transaction 
+where   client_id = 'PELI'
+and     (
+        ( code = 'Pick' and to_loc_id = 'CONTAINER')
+        or
+        ( code = 'Replenish')
+        )
+and     to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') and to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY')
+group by 'ZZ results of ' || code
+order by code]]>
+	</queryString>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="TOTAL_SECONDS" class="java.math.BigDecimal"/>
+	<title>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30" uuid="34e61aa9-01ea-4732-88a1-a7dca8d2dc7c"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PELI figures for productivity measuments]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="0" width="130" height="21" uuid="e51f740b-4b55-4f37-bb31-6087b1188155"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Transaction Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="140" height="21" uuid="4620edb4-ec0d-44a3-a50f-391eef98a0ae"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Number of transactions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="130" height="21" uuid="7f4eb9ce-cca1-4f98-b3ea-5247cf8dc0b3"/>
+				<text><![CDATA[Total seconds spend]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="80" y="0" width="130" height="17" uuid="0c893902-2d47-41f7-a345-56facc765ab4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="140" height="17" uuid="a4ed23e8-013f-4914-8022-ed6ddc2a6d3b"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="130" height="17" uuid="d1cf7d78-2a15-4758-afab-178eb69191b5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_SECONDS}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="0" width="554" height="17" uuid="6f683ad4-9206-4033-b5bd-d5d28460e1e3"/>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

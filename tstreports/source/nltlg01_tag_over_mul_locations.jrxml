@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nltlg01_tag_over_mul_locations" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0c383a26-de9d-432d-a726-efc723640c3e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT DISTINCT t1.CLIENT_ID
+     , t1.tag_id, t1.SKU_ID
+     , i.LOCATION_ID 
+FROM DCSDBA.INVENTORY i
+inner join 
+          (
+SELECT DISTINCT inv.CLIENT_ID, inv.tag_id, inv.SKU_ID, COUNT(inv.LOCATION_ID)  FROM DCSDBA.inventory inv
+where inv.SITE_ID = 'NLTLG01' 
+and inv.sku_id in (SELECT s.sku_id FROM dcsdba.sku s where s.client_id = inv.client_id and s.sku_id = inv.sku_id and s.SERIAL_AT_RECEIPT = 'Y')
+and inv.LOCATION_ID in (SELECT l.location_id FROM dcsdba.location l where l.loc_type in ('Tag-Operator', 'Tag-FIFO'))
+having COUNT(inv.LOCATION_ID)>1
+Group by inv.CLIENT_ID, inv.tag_id, inv.SKU_ID
+) t1
+ on t1.tag_id = i.tag_id
+and i.LOCATION_ID in (SELECT l.location_id FROM dcsdba.location l where l.loc_type in ('Tag-Operator', 'Tag-FIFO'))]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENT_ID"/>
+	</field>
+	<field name="TAG_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TAG_ID"/>
+	</field>
+	<field name="SKU_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SKU_ID"/>
+	</field>
+	<field name="LOCATION_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LOCATION_ID"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="130" y="10" width="267" height="17" uuid="6bddc11b-7597-40ea-bb58-4ded2c5b82fc"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tag ID Over Multiple Locations]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="0" width="100" height="20" uuid="50ed36da-3019-4472-890d-79553f2cce40">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8fedce1e-ed70-4987-a6ca-2592f898645e"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="0" width="100" height="20" uuid="f64078ae-ce43-40a7-96fe-9dac67414622">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0cf9d6d8-43c7-434b-b161-1ae99da0b963"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TAG_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="0" width="100" height="20" uuid="201db37a-be44-4919-8482-67c0c20261e8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="19c22466-d7f3-47b9-9467-442be798837c"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="0" width="100" height="20" uuid="2563cf55-4031-4806-91a8-faca73037d38">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f466b4b5-0c5a-48ab-8a78-ba21b437856f"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LOCATION_ID]]></text>
+			</staticText>
+			<line>
+				<reportElement x="11" y="20" width="525" height="1" uuid="55712280-6927-4284-b721-418685d06e50"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="20" y="0" width="100" height="20" uuid="4e0eb361-d43d-4503-b3be-c7e66733d68e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8fedce1e-ed70-4987-a6ca-2592f898645e"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="100" height="20" uuid="2b4cba25-8232-44d7-b278-b87592f80161">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0cf9d6d8-43c7-434b-b161-1ae99da0b963"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TAG_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="0" width="100" height="20" uuid="297b0370-3ef0-4182-bde0-60bd5cc08acc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="19c22466-d7f3-47b9-9467-442be798837c"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="0" width="100" height="20" uuid="871bf690-8886-42a7-8d6e-c1f984a41775">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f466b4b5-0c5a-48ab-8a78-ba21b437856f"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCATION_ID}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="21" width="534" height="1" uuid="dc60a5c7-c429-43a5-a6b8-0aee231ed1a8"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

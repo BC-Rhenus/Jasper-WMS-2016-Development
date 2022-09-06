@@ -1,0 +1,33 @@
+[Mon Sep  5 00:00:58 2022] Command Invocation: billingprocdae -A IRODIR -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/tstdba/reports/tpb/billingprocdae_IRODIR.log -L 3 -Z Europe/Amsterdam 
+[Mon Sep  5 00:00:58 2022] BC Transaction Processing daemon - Succesfully connected to server
+[Mon Sep  5 00:00:58 2022] day_of_week_specified 0
+[Mon Sep  5 00:00:58 2022] day_of_week 1
+[Mon Sep  5 00:00:58 2022] curr_day_of_week 1
+[Mon Sep  5 00:00:58 2022] current_time 58
+[Mon Sep  5 00:00:58 2022] action_time 7200
+[Mon Sep  5 00:00:58 2022] current_date 44905
+[Mon Sep  5 00:00:58 2022] last_update 44905
+[Mon Sep  5 00:00:58 2022] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Mon Sep  5 00:00:58 2022] Process Transactions
+[Mon Sep  5 00:00:58 2022] ====================
+[Mon Sep  5 00:00:58 2022] Daemon Type         [ALL]
+[Mon Sep  5 00:00:58 2022] SLA Type            [PRICE]
+[Mon Sep  5 00:00:58 2022] Client              [IRODIR]
+[Mon Sep  5 00:00:58 2022] Blanket Contract    []
+[Mon Sep  5 00:00:58 2022] Contract            []
+[Mon Sep  5 00:00:58 2022] Term                []
+[Mon Sep  5 00:00:58 2022] Invoice Group       []
+[Mon Sep  5 00:00:58 2022] Rule                []
+[Mon Sep  5 00:00:58 2022] Use Scheduling      [Y]
+[Mon Sep  5 00:00:58 2022] Include Prior       [Y]
+[Mon Sep  5 00:00:58 2022] Include Processed   [N]
+[Mon Sep  5 00:00:58 2022] Include NoRuleFound [N]
+[Mon Sep  5 00:00:58 2022] MarkNORULEFOUNDOnFly[N]
+[Mon Sep  5 00:00:58 2022] MarkNORULEFOUNDOnly [N]
+[Mon Sep  5 00:00:58 2022] Commit Size         [1000]
+[Mon Sep  5 00:00:58 2022] Email Address       [tim.grol@nl.rhenus.com]
+[Mon Sep  5 00:00:58 2022] Email Level         [1]
+[Mon Sep  5 00:00:58 2022] Time Zone           [Europe/Amsterdam]
+[Mon Sep  5 00:00:59 2022] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Mon Sep  5 00:00:59 2022] BC Transaction Processing daemon - Disconnected from server
+

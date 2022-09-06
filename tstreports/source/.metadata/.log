@@ -1,0 +1,64 @@
+!SESSION 2021-05-19 15:55:24.372 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_67
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data @noDefault
+
+!ENTRY com.jaspersoft.studio 1 0 2021-05-19 15:55:28.011
+!MESSAGE Starting JaspersoftStudio bundle - Version: 6.0.0.final
+
+!ENTRY org.eclipse.osgi 2 1 2021-05-19 15:55:43.122
+!MESSAGE NLS unused message: CacheManager_CannotLoadNonUrlLocation in: org.eclipse.equinox.internal.p2.repository.messages
+
+!ENTRY org.eclipse.egit.ui 2 0 2021-05-19 15:55:47.424
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 2 0 2021-05-19 15:55:47.429
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'P:\'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2021-05-19 15:55:47.471
+!MESSAGE No repository found at http://jasperstudio.sf.net/jssproductrepo_5_1_x_CE/.
+!SESSION 2021-05-19 16:04:22.489 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_67
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Framework arguments:  \\dehze01-lsv366.rhs.zz\tstreports\source\WLG_Return_Label.jrxml
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data @noDefault \\dehze01-lsv366.rhs.zz\tstreports\source\WLG_Return_Label.jrxml
+
+!ENTRY com.jaspersoft.studio 1 0 2021-05-19 16:04:25.889
+!MESSAGE Starting JaspersoftStudio bundle - Version: 6.0.0.final
+
+!ENTRY org.eclipse.core.resources 2 10035 2021-05-19 16:04:26.099
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.osgi 2 1 2021-05-19 16:04:36.460
+!MESSAGE NLS unused message: CacheManager_CannotLoadNonUrlLocation in: org.eclipse.equinox.internal.p2.repository.messages
+
+!ENTRY org.eclipse.egit.ui 2 0 2021-05-19 16:04:37.092
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 2 0 2021-05-19 16:04:37.097
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'P:\'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2021-05-19 16:04:40.717
+!MESSAGE No repository found at http://jasperstudio.sf.net/jssproductrepo_5_1_x_CE/.

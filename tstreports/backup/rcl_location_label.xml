@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<export_settings>
+
+	<!-- settings for the zebra print exporter -->
+	<zebra>
+		<!-- Dots per inch set in the zebra printer -->
+		<dpi>200</dpi>
+
+
+		<!-- The command used to start the label. The
+		     co-ordinates of the label origin can be set -->
+		<label_start>^LH0,0</label_start>
+
+
+		<!-- font tags are used to map font names used in
+		     i-report to fonts on the printer device -->
+		<font>
+			<font_name>Swiss721 BT</font_name>
+			<font_file>R:TT0003M_.FNT</font_file>
+			<zebra_font>Q</zebra_font>
+		</font>
+
+
+		<!-- The default device where images are to be
+		     stored on the printer. R: means RAM. If the
+		     images are stored in RAM they will be removed
+		     each time the printer is turned off -->
+		<image_default_device>R:</image_default_device>
+		
+
+		<!-- image tags are used to map image names used
+		     in i-report with the actual image stored in
+		     the printer. These are optional and do not
+		     need to be set for each image. If there is
+		     no image tag the name used in i-report must
+		     be the same as the file stored in the printer -->
+                <image>
+			<name>RPLOGO</name> <!-- Name in i-report -->
+			<file>RPLOGO.GRF</file> <!-- File on the printer -->
+			<device>R:</device> <!-- overides default set above -->
+			<x_scale>1</x_scale> <!-- multiplier on x-axis -->
+			<y_scale>1</y_scale> <!-- multiplier on y-axis -->
+                </image>
+
+
+		<!-- barcode tags are used to map barcode names used in
+		     i-report to a zebra barcode command. Note #0 and #H
+		     will be substituted for the origin and height -->
+
+		<barcode>
+			<name>code39</name>
+			<zebra_code>^BY2,2,70</zebra_code>
+			<zebra_code>^B3 N,N,70,N</zebra_code>
+			</barcode>
+
+		<barcode>
+			<name>code128</name>
+			<zebra_code>^BY2,2,70</zebra_code>
+			<zebra_code>^BC N,70,N</zebra_code>
+			</barcode>
+
+	</zebra>
+
+</export_settings>

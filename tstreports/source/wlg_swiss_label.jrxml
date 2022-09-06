@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="wlg_return_label" pageWidth="283" pageHeight="90" columnWidth="243" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fe0dbd7d-e393-43d5-819a-96eb6246e6d2">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016PROD"/>
+	<style name="Style1"/>
+	<parameter name="order_id" class="java.lang.String"/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select sum(l.qty_tasked+l.qty_picked)
+ from dcsdba.order_line l 
+ where l.order_id = $P{order_id} and l.client_id = $P{client_id}
+ and sku_id not in ('TSET1016')]]>
+	</queryString>
+	<field name="SUM(L.QTY_TASKED+L.QTY_PICKED)" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="49" splitType="Stretch">
+			<staticText>
+				<reportElement x="31" y="-20" width="158" height="10" uuid="294f00f5-c35f-4729-a3fe-afe2e6e2f1d2"/>
+				<textElement>
+					<font fontName="Bookman Old Style" size="7" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Authorized representative for Switzerland]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="-10" width="70" height="20" uuid="c39539a0-96da-4787-85b6-1f8623470b22"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROVAS AG
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="0" width="90" height="30" uuid="dd448bbf-4457-4db3-b581-01cf8807e78c"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Bahnhofstrasse 5
+CH-8600 Dubendorf
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="25" width="90" height="18" uuid="b65435be-80b1-4013-b3b6-3161f04228fe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Switzerland]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="37" width="40" height="12" uuid="7ad461cb-6d73-4697-9b13-6a552467d561"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[30257617]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="180" y="0" width="71" height="31" uuid="3b2ead12-1130-4f8c-a319-83d1cbb52fe0"/>
+				<textElement>
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<BAR=wlgqrcode>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Overpick_ship_issue" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="74ac1694-2704-43ea-9796-eed2561c968e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="OfWMS2016 ACC"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT   ol.CLIENT_ID
+       , ol.order_id
+       , (SELECT oh.status FROM dcsdba.order_header oh where oh.client_id = ol.client_id and oh.order_id = ol.order_id) status
+       , (SELECT trunc (oh.SHIPPED_DATE) FROM dcsdba.order_header oh where oh.client_id = ol.client_id and oh.order_id = ol.order_id) SHIPPED_DATE
+       , ol.LINE_ID
+       , ol.SKU_ID
+       , ol.LINE_VALUE
+       , ol.QTY_ORDERED
+       , ol.QTY_TASKED
+       , ol.QTY_PICKED
+       , ol.QTY_SHIPPED  
+       , ol.qty_picked + ol.qty_tasked - ol.qty_ordered qty_mismatch
+       , (ol.qty_picked + ol.qty_tasked - ol.qty_ordered) * nvl(ol.LINE_VALUE/ol.QTY_ORDERED,0) qty_value
+FROM dcsdba.order_line ol
+where (ol.QTY_ORDERED < ol.QTY_TASKED 
+or ol.QTY_ORDERED < ol.QTY_PICKED)
+and (SELECT oh.SHIPPED_DATE FROM dcsdba.order_header oh where oh.client_id = ol.client_id and oh.order_id = ol.order_id)> (sysdate-1)
+order by SHIPPED_DATE desc]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="SHIPPED_DATE" class="java.sql.Timestamp"/>
+	<field name="LINE_ID" class="java.math.BigDecimal"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="LINE_VALUE" class="java.math.BigDecimal"/>
+	<field name="QTY_ORDERED" class="java.math.BigDecimal"/>
+	<field name="QTY_TASKED" class="java.math.BigDecimal"/>
+	<field name="QTY_PICKED" class="java.math.BigDecimal"/>
+	<field name="QTY_SHIPPED" class="java.math.BigDecimal"/>
+	<field name="QTY_MISMATCH" class="java.math.BigDecimal"/>
+	<field name="QTY_VALUE" class="java.math.BigDecimal"/>
+	<title>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="248" y="6" width="306" height="24" uuid="c53ca2ef-1ce6-407d-8f71-544ca4814efe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Over Picked/Shipped qty"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="70" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4fa183e5-ef7c-4bff-ae2c-dde5a1c4ee58"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="70" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4191ea02-8c47-4d2d-bec7-f63f1e9a83b2"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="131" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="70c39b55-5399-4d9e-b841-cbf0097d60cd"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="192" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="aabea9bb-9abc-4f6c-b107-3788f63182ba"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[SHIPPED_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="253" y="0" width="37" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="96258bbb-7675-463f-9960-f535342b9d7f"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[LINE_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="290" y="0" width="85" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f574038b-e96e-4590-9f19-fc69576854ee"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="375" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c0e1f8b4-7630-4e94-852a-357a1d305097"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[LINE_VALUE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="436" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5b445277-7bb0-4c3d-8f9f-d32c5f0b4214"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[QTY_ORDERED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="497" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="8821bd69-3d38-4b7e-a180-ba209e16a921"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[QTY_TASKED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="558" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="875e2b74-e762-4cde-bba2-7dc5ce977262"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[QTY_PICKED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="619" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="dbf8a6cb-71ae-4e8a-a1a0-bcf26c0f5a1b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[QTY_SHIPPED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="680" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a1b61f9a-8965-42af-a390-e92b60bbc191"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[QTY_MISMATCH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="741" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="3f6b6e7f-705d-41be-97d7-277903b89430"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[QTY_VALUE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="0" width="70" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0d5e98ae-1f61-482d-89a3-319f09885b11"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="70" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7e4389a5-9aa6-4ada-bef3-516540909d8b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="131" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="51fd3f4d-63b0-45c0-8c86-5c64fcd75438"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STATUS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="192" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="eb5dad33-6196-4467-9683-84dff5857b93"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHIPPED_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="253" y="0" width="37" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9920fb99-c43a-4a47-8384-ef403d555d3b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LINE_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="290" y="0" width="85" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7661baf6-9e1d-4dda-add1-ccc2b6c6a07e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="375" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9b3c1ac6-e1f1-4481-9d11-b4943a95c0af"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LINE_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="436" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c278075a-cac4-4bb1-b6d2-3bc3ad8da87c"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_ORDERED}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="497" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="14126e8a-5e4a-48b4-9b7f-06b32e500aaa"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_TASKED}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="558" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="3321343c-6f17-4cbc-8dd6-72794b042700"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_PICKED}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="619" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="79b5bc0e-4ae3-4d48-8a99-1abbe48a9de4"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_SHIPPED}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="680" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c1831f5e-01ab-4edf-acc6-da22e7afee20"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_MISMATCH}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="741" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="99aa1a67-be9b-4823-8210-2f826652c21b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY_VALUE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

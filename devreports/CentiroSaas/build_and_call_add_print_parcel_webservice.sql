@@ -1,0 +1,17 @@
+SET SERVEROUTPUT OFF
+SET FEEDBACK OFF
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+
+SET PAGESIZE 0
+SET VERIFY OFF
+SET FEEDBACK OFF
+SET TAB OFF
+
+execute cnl_sys.cnl_cto_pck.centiro_add_print_parcels_p('&1','&2','&3','&4','&5',&6,'&7');
+
+exit;
+
+

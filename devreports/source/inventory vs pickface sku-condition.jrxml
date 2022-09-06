@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2018-01-04T13:45:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventory vs pickface sku-condition" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c2ad5684-c2e9-4187-b9a5-397efd172813">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 ACC"/>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 	i.client_id 	as client_id
+,       	 	i.sku_id		as sku_id
+,       		i.condition_id as condition_id
+,       		sum(i.qty_on_hand) as total_qty
+from    	inventory i
+where   	i.sku_id not in ( 	select 	p.sku_id 
+												from 		pick_face p 
+												where 	p.client_id = i.client_id 
+												and 			nvl(p.condition_id,'N') = nvl(i.condition_id,'N')
+											)
+and     		i.client_id = $P{client_id}
+group by i.client_id, i.sku_id, i.origin_id, i.condition_id
+order by client_id, sku_id]]>
+	</queryString>
+	<field name="CLIENT_ID" class="java.lang.String"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="CONDITION_ID" class="java.lang.String"/>
+	<field name="TOTAL_QTY" class="java.math.BigDecimal"/>
+	<title>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="0" width="530" height="50" uuid="daa7ea43-09f5-4b77-b1bc-e905b822fd90"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[This report shows all SKU / condition combinations where we have inventory of but no pick face exists.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="e2ee26a9-9a5d-48d6-bdc1-b65e4352628f"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENT_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="30" uuid="14288d6a-f299-46bc-86cc-6b690210061e"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="30" uuid="8383ac6a-fb6f-4347-8c05-321e1baf3088"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONDITION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="30" uuid="4eed0318-066c-4d2c-aa6f-356d03654c1c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL_QTY]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-2" y="27" width="556" height="3" uuid="4b6e4f45-ac42-422f-9080-7158e8f5a869"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="-1" width="100" height="21" uuid="0bb1a676-4ea1-462f-8377-774e86e22afd"/>
+				<textFieldExpression><![CDATA[$F{CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="501375dd-fb8f-428d-aee7-92c6dab7194c"/>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="c97f09ec-4063-4fcf-ab6b-3ac294cd6b83"/>
+				<textFieldExpression><![CDATA[$F{CONDITION_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20" uuid="f878cad7-b44a-42d9-b865-3bac7c6beae4"/>
+				<textFieldExpression><![CDATA[$F{TOTAL_QTY}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

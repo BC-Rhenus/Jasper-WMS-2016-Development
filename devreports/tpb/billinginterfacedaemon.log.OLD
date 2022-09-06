@@ -1,0 +1,13 @@
+Nov 26, 2019 12:00:27 AM - ALWAYS: 
+Nov 26, 2019 12:00:27 AM - ALWAYS: ==========================================================================================================
+Nov 26, 2019 12:00:27 AM - ALWAYS: 
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDae: -o /home/devdba/tmp/DEVCNLJW/BillingInterfaceDae.log -m /home/devdba/xml/WMSInterfaceMapping.xml -m /home/devdba/xml/WMSInterfaceMapping.xml -s dehze01-lsv364_DEVCNLJW -p dcsdba/dcsabd -b dehze01-lsv364_DEVCNLJW -a dcsdba/dcsabd -u RCL-WMS -y RCL-WMS -1 -f -o /home/devdba/reports/tpb/billinginterfacedaemon.log -L 3
+Nov 26, 2019 12:00:27 AM - ALWAYS: 
+Nov 26, 2019 12:00:27 AM - ALWAYS: ==========================================================================================================
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDaeUsing Default Target Table Name[AB_BASE_TRANS]
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDaeUsing Default Source Table Name[AB_DTRANSACTION]
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDaeUsing Default UPLOADED Column[UPLOADED]
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDaeUsing Default KEY Column[KEY]
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDaeUsing Default OWNER Column[OWNER_ID]
+Nov 26, 2019 12:00:27 AM - ALWAYS: BillingInterfaceDaeUsing Default CLIENT Column[CLIENT_ID]
+TETS

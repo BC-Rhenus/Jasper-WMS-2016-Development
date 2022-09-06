@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rhomovetasksheet" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.2396694214876076"/>
+	<property name="ireport.x" value="12"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\martijn.swinkels2\\Desktop\\iReport Compilation"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="client_id" class="java.lang.String"/>
+	<parameter name="pre_advice_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select   		p.client_id                             		as PAH_CLIENT_ID
+,         		p.Pre_advice_id                         		as PAH_PRE_ADVICE_ID
+,         		p.notes                                 		as PAH_NOTES
+,				p.owner_id										as PAH_OWNER_ID
+,         		p.status                                		as PAH_STATUS
+,         		pl.line_id                              		as PAL_LINE_ID
+,         		pl.sku_id                               		as PAL_SKU_ID
+,         		pl.qty_due                              		as PAL_QTY_DUE
+,         		pl.qty_received                         		as PAL_QTY_REC
+,         		ss.config_id                            		as PAL_CONFIG_ID
+,         		sc.ratio_1_to_2 || sc.rdt_track_level_1 || ' ' || sc.ratio_2_to_3 || sc.rdt_track_level_2 || ' ' || sc.ratio_3_to_4 || sc.rdt_track_level_3 || ' ' || sc.ratio_4_to_5 || sc.rdt_track_level_4 || ' ' || sc.ratio_5_to_6 || sc.rdt_track_level_5 || ' ' || sc.ratio_6_to_7 || sc.rdt_track_level_6 || ' ' || sc.ratio_7_to_8 || sc.rdt_track_level_7 || ' ' || sc.rdt_track_level_8 as PCK_PACK_CONFIG
+,		  		sc.each_per_layer 						as each_per_layer
+,         		pl.qty_due/sc.ratio_1_to_2 		as qty_per_box
+from       dcsdba.pre_advice_header p
+,          dcsdba.pre_advice_line pl
+,          dcsdba.sku_sku_config ss
+,          dcsdba.sku_config sc
+where    p.client_id = $P{client_id}
+and       	pl.client_id = p.client_id
+and       	ss.client_id = p.client_id
+and       	sc.client_id = p.client_id
+and       	p.pre_advice_id = $P{pre_advice_id}
+and       	pl.pre_advice_id = p.pre_advice_id
+and       	ss.sku_id = pl.sku_id
+and       	sc.config_id = ss.config_id
+union
+select    	p.client_id                             		as PAH_CLIENT_ID
+,         		p.Pre_advice_id                         as PAH_PRE_ADVICE_ID
+,         		p.notes                                 		as PAH_NOTES
+,				p.owner_id										as PAH_OWNER_ID
+,         		p.status                                		as PAH_STATUS
+,         		pl.line_id                              		as PAL_LINE_ID
+,    		    pl.sku_id                               		as PAL_SKU_ID
+,         		pl.qty_due                              	as PAL_QTY_DUE
+,        		pl.qty_received                         	as PAL_QTY_REC
+,         		null                                    			as PAL_CONFIG_ID
+,         		null                                    			as PCK_PACK_CONFIG
+,		  		null												as each_per_layer
+,         		null									 			as qty_per_box
+from     	dcsdba.pre_advice_header p
+,        	dcsdba.pre_advice_line pl
+where    p.client_id = $P{client_id}
+and       	pl.client_id = p.client_id
+and       	p.pre_advice_id = $P{pre_advice_id}
+and       	pl.pre_advice_id = p.pre_advice_id
+and       	pl.sku_id not in (  	select    	ss.sku_id
+                              					from      	dcsdba.sku_sku_config ss
+                              					where    ss.client_id = p.client_id
+                            				)]]>
+	</queryString>
+	<field name="PAH_CLIENT_ID" class="java.lang.String"/>
+	<field name="PAH_PRE_ADVICE_ID" class="java.lang.String"/>
+	<field name="PAH_NOTES" class="java.lang.String"/>
+	<field name="PAH_OWNER_ID" class="java.lang.String"/>
+	<field name="PAH_STATUS" class="java.lang.String"/>
+	<field name="PAL_LINE_ID" class="java.math.BigDecimal"/>
+	<field name="PAL_SKU_ID" class="java.lang.String"/>
+	<field name="PAL_QTY_DUE" class="java.math.BigDecimal"/>
+	<field name="PAL_QTY_REC" class="java.math.BigDecimal"/>
+	<field name="PAL_CONFIG_ID" class="java.lang.String"/>
+	<field name="PCK_PACK_CONFIG" class="java.lang.String"/>
+	<field name="EACH_PER_LAYER" class="java.math.BigDecimal"/>
+	<field name="QTY_PER_BOX" class="java.math.BigDecimal"/>
+	<sortField name="PAL_LINE_ID"/>
+	<pageHeader>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="88b0c901-a006-496e-a8ae-32d5c8bb244c" x="0" y="64" width="100" height="20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Owner:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="be8f0076-4a26-4f64-a2b2-9846f042b05b" x="100" y="64" width="680" height="20">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAH_OWNER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="da3c3af1-84c4-478a-8cb6-99d2ee2d93fd" x="550" y="40" width="170" height="24"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAH_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="32731e8a-962f-4547-8e23-e9430fe799c4" x="170" y="39" width="210" height="24"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAH_PRE_ADVICE_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b60b269a-494b-4773-a49c-67e249cf574e" x="380" y="39" width="170" height="24"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Status:  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1801e886-ab4d-4b09-a911-ccebc08b2a19" x="1" y="39" width="170" height="24"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Pre Advice Nbr:  ]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="b7ad572a-0f79-4661-8d67-04c61c61112f" x="660" y="0" width="140" height="34"/>
+				<imageExpression><![CDATA[$P{JR_TEMPLATE_DIR} + "/images/Rhenus_Logo.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="d07e34bc-2bee-4bc3-8ccf-b99819aac23d" x="2" y="0" width="128" height="40"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAH_CLIENT_ID}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement uuid="5dfb5b81-b50e-4613-bf8b-798f3c684e7c" x="301" y="1" width="200" height="38"/>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA[$F{PAH_PRE_ADVICE_ID}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<line>
+				<reportElement uuid="4f0c9a24-d9d5-4600-bb5d-0bbe15568a6c" x="0" y="15" width="800" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="bf61c092-e94a-4b3a-8ba7-0459ee9dbf90" x="483" y="0" width="130" height="13">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pallet Build]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94deb854-7b58-4abe-b0d5-03fea6d83634" x="21" y="0" width="30" height="13">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nr.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6468672f-da6e-4b77-9d85-1dcdc25a0557" x="73" y="0" width="200" height="13">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sku id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="689fc41f-4902-4b5c-92d1-9ee8826e8606" x="273" y="0" width="55" height="13">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTY Due]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="502637f2-329c-4587-a190-61e1a3cc3b34" x="373" y="0" width="55" height="13">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTY Rec]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Prevent">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fe592ec9-5c95-41a5-8220-6aa59bc0758f" key="" x="483" y="0" width="130" height="13">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PCK_PACK_CONFIG}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9523b358-e466-4015-8e8f-e3a31cd7b6e1" isPrintRepeatedValues="false" x="21" y="0" width="30" height="13">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PAL_LINE_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="61a3179a-3e60-4510-9bd9-1eb18fc5e55b" x="73" y="0" width="200" height="13">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PAL_SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="89ece984-0015-4178-b473-57ba6a520d54" x="273" y="0" width="55" height="13">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{PAL_QTY_DUE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f29cdaf4-ef00-4a69-943e-757c18ea3c53" x="373" y="0" width="55" height="13">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{PAL_QTY_REC}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="84a5e6a6-6250-432e-8a28-a0661db310b1" x="1" y="14" width="800" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="78">
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement uuid="1b49a696-0c9e-45a4-8c68-5d5ba6782e80" x="0" y="60" width="140" height="12"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fd27984f-e39b-437a-9216-141e8daa9167" x="620" y="60" width="80" height="12"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="8dbc599e-06bc-40a2-a590-83a93747461a" x="700" y="60" width="40" height="12"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="772ede3a-ee9a-40c3-88f5-ebfa9c33cd00" x="0" y="30" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="afd3d046-63d2-46cf-8304-a83f7232e154" x="0" y="51" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="f34199b6-bed1-4da1-a660-39755335e321" x="0" y="0" width="170" height="20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Remarks Warehouse:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

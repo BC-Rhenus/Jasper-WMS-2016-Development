@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2021-04-30T07:50:31 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_bea_dgwh_pendel_order" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Error" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.6500000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_PRD"/>
+	<property name="net.sf.jasperreports.default.timezone" value="CET"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\tim.grol\\Desktop\\ireport\\MyReports"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select null tag_id,159800 debiteur,(to_char(sysdate,'YYYYMMDD')||'-BEA') reference,'Rhenus Contract Logistics' name_customer
+,'Ekkersrijt 2060a' street_name,'5692 BA' zipcode,'Son en Breugel' place,'Netherlands' country
+,total.sku_id,total.advise_order_qty
+,null weight,null ordercode,to_char((cnl_sys.cnl_wms_mergerule_pck.get_work_day_f((sysdate),1,'+')),'YYYYMMDD') delivery_date
+--,to_char((select adr.user_def_date_1 from dcsdba.address adr where adr.address_id='NEXTWORKDAY' and adr.client_id='BEA'),'YYYYMMDD') delivery_date
+,'0800' time_from,'1200' time_to
+,total.batch_id
+,'Standard Replenishment Beaphar' ordertekst
+,to_char(total.expiry_date,'DD-MON-YYYY') expiry_date
+from (
+/*STD*/
+select sku_id,'' batch_id,min_exp_date expiry_date,advise_order_qty
+from (
+select sku_id,min(min_exp_date) min_exp_date
+,(case when sub_total_std>=max_qty then 0 /*enough at rcl*/
+when ((floor((max_qty-sub_total_std)/max_qty))*max_qty)<=dgw_qty_available
+then ((floor((max_qty-sub_total_std)/max_qty))*max_qty) /*order based on multiplier of max_qty*/
+when sub_total_std between 0 and min_qty and family_group in ('BEAHG1P','BEAHG2P') and plt_qty<=dgw_qty_available then plt_qty /*order 1 pallet for pallet famgroups when rest is less then minimum qty*/
+when sub_total_std between 0 and min_qty and ((ceil((max_qty-sub_total_std)/box_qty))*box_qty)<=dgw_qty_available
+then ((ceil((max_qty-sub_total_std)/box_qty))*box_qty) /*order difference between rest and max qty rounded up to full boxes for other famgroups when rest is less then minimum qty*/
+else dgw_qty_available end) advise_order_qty /*when not enough order everything at dgwh*/
+from (
+select sub.sku_id,sub.family_group,sub.min_exp_date,sum(sub.sub_total_std) sub_total_std,sub.max_qty
+,nvl(dgw_inv.dgw_qty_available,0) dgw_qty_available
+,(case when sub.family_group='BEAHG1P' then sub.each_per_layer /*for 1 pallet the trigger qty is 1 layer*/
+else ceil(sub.max_qty/2) end) min_qty /*rest is 50% of max qty the trigger qty*/
+,sub.each_per_layer,sub.box_qty,sub.plt_qty
+from (
+select sku_id,family_group,min_exp_date
+,(nvl(sum(rcl_qty_available),0)-nvl(odl_qty_std,0)) sub_total_std
+,(case when family_group='BEAHG1P' then plt_qty
+    when family_group='BEAHG2P' then (plt_qty*2)
+    when family_group='BEAHGFL' then (ceil((each_per_layer/box_qty))*box_qty)
+    when family_group='BEAHGSH' then (box_qty*2)
+    else (ceil((odl_qty_std/box_qty))*box_qty)
+    end) max_qty
+,each_per_layer,box_qty,plt_qty
+from (
+select rcl.sku_id,rcl.rcl_qty_available,rcl.family_group
+,max(trunc(greatest(nvl(rcl.ship_by_date,sysdate),sysdate))+(rcl.sku_shelf_life+2)) min_exp_date
+,rcl.plt_qty,rcl.box_qty,rcl.each_per_layer
+,sum(rcl.odl_qty_std) odl_qty_std
+from (
+select odl_std.sku_id,rcl_inv.rcl_qty_available
+,odl_std.family_group,odl_std.ship_by_date,odl_std.plt_qty,odl_std.box_qty,odl_std.each_per_layer,odl_std.sku_shelf_life
+,odl_std.qty_ordered odl_qty_std
+from (
+    (select odl.sku_id,sum(odl.qty_ordered) qty_ordered
+    ,odh.ship_by_date,sku.family_group
+    ,(case when pck.track_level_5='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4*pck.ratio_4_to_5)
+    when pck.track_level_4='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4)
+    when pck.track_level_3='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3)
+    when pck.track_level_2='PALLET' then (pck.ratio_1_to_2)
+    when pck.track_level_1='PALLET' then 1
+    else null end) plt_qty
+    ,(case when pck.track_level_5 in ('BOX','OBX','IBX','CET','FOIL') then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4*pck.ratio_4_to_5)
+    when pck.track_level_4 in ('BOX','OBX','IBX','CET','FOIL') then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4)
+    when pck.track_level_3 in ('BOX','OBX','IBX','CET','FOIL') then (pck.ratio_1_to_2*pck.ratio_2_to_3)
+    when pck.track_level_2 in ('BOX','OBX','IBX','CET','FOIL') then (pck.ratio_1_to_2)
+    when pck.track_level_1 in ('BOX','OBX','IBX','CET','FOIL') then 1
+    else null end) box_qty
+    ,pck.each_per_layer
+    ,nvl(sku.ship_shelf_life,90) sku_shelf_life
+    from dcsdba.order_header odh
+    inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id
+    inner join dcsdba.sku sku on odl.sku_id=sku.sku_id and odl.client_id=sku.client_id
+    inner join (select lnk.sku_id,lnk.config_id,lnk.client_id,lnk.main_config_id,row_number() over (partition by lnk.sku_id,lnk.client_id order by nvl(lnk.main_config_id,'N') desc,lnk.dstamp desc) rnk
+        from dcsdba.sku_sku_config lnk 
+        where nvl(lnk.disabled,'N')='N') rec
+    on sku.sku_id=rec.sku_id and sku.client_id=rec.client_id and rec.rnk=1
+    inner join dcsdba.sku_config pck on rec.config_id=pck.config_id and rec.client_id=pck.client_id
+    where odh.client_id='BEA'
+    and odh.status in ('Hold','Released')
+    and nvl(sku.hazmat,'N')='Y'
+    and odl.batch_id is null
+    and odl.shelf_life_days is null
+    group by odl.sku_id,odh.ship_by_date,sku.family_group,pck.track_level_1,pck.track_level_2,pck.track_level_3,pck.track_level_4,pck.track_level_5,pck.ratio_1_to_2,pck.ratio_2_to_3,pck.ratio_3_to_4,pck.ratio_4_to_5,pck.each_per_layer,sku.ship_shelf_life
+    ) odl_std
+    left join
+    (select inv.sku_id,sum(inv.qty_on_hand-inv.qty_allocated) rcl_qty_available
+    from dcsdba.inventory inv
+    inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+    inner join dcsdba.location loc on inv.location_id=loc.location_id and inv.site_id=loc.site_id
+    where inv.client_id='BEA'
+    and inv.site_id='NLSBR01'
+    and inv.location_id<>'DGWH'
+    and nvl(sku.hazmat,'N')='Y'
+    and loc.zone_1 like '_L-S1-08-6'
+    and loc.subzone_1='08DG'
+    and (inv.qty_on_hand-inv.qty_allocated)<>0
+    and trunc(inv.expiry_dstamp)>=(trunc(sysdate)+(nvl(sku.ship_shelf_life,90)+2))
+    group by inv.sku_id
+    ) rcl_inv
+    on odl_std.sku_id=rcl_inv.sku_id
+    )
+) rcl
+group by rcl.sku_id,rcl.rcl_qty_available,rcl.family_group,rcl.plt_qty,rcl.box_qty,rcl.each_per_layer
+)
+group by sku_id,odl_qty_std,family_group,min_exp_date,plt_qty,box_qty,each_per_layer
+) sub
+    left join (
+    select dgw.sku_id,sum(dgw.qty_on_hand-dgw.qty_allocated) dgw_qty_available
+    from dcsdba.inventory dgw
+    inner join dcsdba.sku sku on dgw.sku_id=sku.sku_id and dgw.client_id=sku.client_id
+    where dgw.client_id='BEA'
+    and dgw.site_id='NLSBR01'
+    and dgw.location_id='DGWH'
+    and trunc(dgw.expiry_dstamp)>=(trunc(sysdate)+(nvl(sku.ship_shelf_life,90)+2))
+    group by dgw.sku_id) dgw_inv
+    on sub.sku_id=dgw_inv.sku_id
+where nvl(dgw_inv.dgw_qty_available,0)>0
+group by sub.sku_id,sub.family_group,sub.min_exp_date,sub.max_qty,nvl(dgw_inv.dgw_qty_available,0),sub.each_per_layer,sub.box_qty,sub.plt_qty
+)
+group by sku_id,max_qty,sub_total_std,dgw_qty_available,min_qty,box_qty,plt_qty,family_group
+)
+where advise_order_qty>0
+union all
+/*BATCH*/
+(select sku_id,batch_id,null expiry_date,advise_order_qty
+from (
+select sub.sku_id,dgw_inv.batch_id,sub.sub_total_bat
+,nvl(dgw_inv.dgw_qty_available,0) dgw_qty_available
+,(case when sub.sub_total_bat>=0 then 0 /*enough at rcl*/
+when sub.sub_total_bat+dgw_qty_available>=0 then (0-sub.sub_total_bat) /*enough at dgwh, order only specific order qty*/
+else dgw_qty_available end) advise_order_qty /*when not enough order everything at dgwh*/
+from (
+select sku_id,batch_id,(nvl(sum(rcl_qty_available),0)-nvl(odl_qty_bat,0)) sub_total_bat
+from (
+select odl_bat.sku_id,odl_bat.batch_id,rcl_inv.rcl_qty_available
+,odl_bat.qty_ordered odl_qty_bat
+from (
+    (select odl.sku_id,sum(odl.qty_ordered) qty_ordered,odl.batch_id
+    from dcsdba.order_header odh
+    inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id
+    inner join dcsdba.sku sku on odl.sku_id=sku.sku_id and odl.client_id=sku.client_id
+    where odh.client_id='BEA'
+    and odh.status in ('Hold','Released')
+    and nvl(sku.hazmat,'N')='Y'
+    and odl.batch_id is not null
+    group by odl.sku_id,odl.batch_id
+    ) odl_bat
+    left join (select inv.sku_id,inv.batch_id,(inv.qty_on_hand-inv.qty_allocated) rcl_qty_available
+    from dcsdba.inventory inv
+    inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+    inner join dcsdba.location loc on inv.location_id=loc.location_id and inv.site_id=loc.site_id
+    where inv.client_id='BEA'
+    and inv.site_id='NLSBR01'
+    and inv.location_id<>'DGWH'
+    and nvl(sku.hazmat,'N')='Y'
+    and loc.zone_1 like '_L-S1-08-6'
+    and loc.subzone_1='08DG'
+    ) rcl_inv
+    on odl_bat.sku_id=rcl_inv.sku_id and odl_bat.batch_id=rcl_inv.batch_id
+    )
+)
+group by sku_id,batch_id,odl_qty_bat
+having (nvl(sum(rcl_qty_available),0)-nvl(odl_qty_bat,0))<=0
+) sub
+    left join (
+    select dgw.sku_id,dgw.batch_id,sum(dgw.qty_on_hand-dgw.qty_allocated) dgw_qty_available
+    from dcsdba.inventory dgw
+    where dgw.client_id='BEA'
+    and dgw.site_id='NLSBR01'
+    and dgw.location_id='DGWH'
+    group by dgw.sku_id,dgw.batch_id) dgw_inv
+    on sub.sku_id=dgw_inv.sku_id and sub.batch_id=dgw_inv.batch_id
+where nvl(dgw_inv.dgw_qty_available,0)>0
+)
+)
+union all
+/*EXPDT*/
+(select sku_id,'' batch_id,expiry_date,advise_order_qty
+from (
+select sku_id,dgw_exp_date expiry_date
+,(case when sub_total_exp>=0 then 0 /*enough at rcl*/
+when sub_total_exp+dgw_qty_available>=0 then (0-sub_total_exp) /*enough at dgwh, order only specific order qty*/
+else dgw_qty_available end) advise_order_qty /*when not enough order everything at dgwh*/
+from (
+select tot.sku_id,tot.dgw_exp_date,tot.sub_total_exp
+,(select nvl(sum(imp.qty_on_hand-imp.qty_allocated),0) dgw_qty_available
+    from dcsdba.inventory imp
+    where imp.client_id='BEA'
+    and imp.site_id='NLSBR01'
+    and imp.location_id='DGWH'
+    and imp.sku_id=tot.sku_id
+    and trunc(imp.expiry_dstamp)=trunc(tot.dgw_exp_date)
+    ) dgw_qty_available
+from (
+select sku_id,min(dgw_exp_date) dgw_exp_date,(rcl_qty_available-sub_qty_exp) sub_total_exp
+from (
+select sub.sku_id,min(dgw_inv.expiry_date) dgw_exp_date,sum(sub.sub_qty_exp) sub_qty_exp,sub.rcl_qty_available,dgw_inv.dgw_qty_available,min(dgw_inv.rnk)
+from (
+select sku_id,expiry_date,rcl_qty_available,sum(odl_qty_exp) sub_qty_exp
+from (
+select odl_exp.order_id,odl_exp.line_id,odl_exp.sku_id,odl_exp.expiry_date,nvl(sum(rcl_inv.rcl_qty_available),0) rcl_qty_available
+,odl_exp.qty_ordered odl_qty_exp
+from (
+    (select odl.order_id,odl.line_id,odl.sku_id,odl.qty_ordered qty_ordered,(trunc(greatest(nvl(ship_by_date,sysdate),sysdate))+odl.shelf_life_days+2) expiry_date
+    from dcsdba.order_header odh
+    inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id
+    inner join dcsdba.sku sku on odl.sku_id=sku.sku_id and odl.client_id=sku.client_id
+    where odh.client_id='BEA'
+    and odh.status in ('Hold','Released')
+    and nvl(sku.hazmat,'N')='Y'
+    and odl.shelf_life_days is not null
+    ) odl_exp
+    left join (select inv.sku_id,trunc(inv.expiry_dstamp) expiry_dstamp,(inv.qty_on_hand-inv.qty_allocated) rcl_qty_available
+    from dcsdba.inventory inv
+    inner join dcsdba.sku sku on inv.sku_id=sku.sku_id and inv.client_id=sku.client_id
+    inner join dcsdba.location loc on inv.location_id=loc.location_id and inv.site_id=loc.site_id
+    where inv.client_id='BEA'
+    and inv.site_id='NLSBR01'
+    and inv.location_id<>'DGWH'
+    and nvl(sku.hazmat,'N')='Y'
+    and loc.zone_1 like '_L-S1-08-6'
+    and loc.subzone_1='08DG'
+    ) rcl_inv
+    on odl_exp.sku_id=rcl_inv.sku_id and odl_exp.expiry_date<=trunc(rcl_inv.expiry_dstamp) and odl_exp.qty_ordered<=rcl_inv.rcl_qty_available
+    )
+    group by odl_exp.order_id,odl_exp.line_id,odl_exp.sku_id,odl_exp.expiry_date,odl_exp.qty_ordered
+)
+group by sku_id,expiry_date,rcl_qty_available
+) sub
+    left join (
+    select dgw.sku_id,trunc(dgw.expiry_dstamp) expiry_date,nvl(sum(dgw.qty_on_hand-dgw.qty_allocated),0) dgw_qty_available
+    ,row_number() over (partition by dgw.client_id,dgw.sku_id order by dgw.client_id,dgw.sku_id,trunc(dgw.expiry_dstamp)) rnk
+    from dcsdba.inventory dgw
+    where dgw.client_id='BEA'
+    and dgw.site_id='NLSBR01'
+    and dgw.location_id='DGWH'
+    group by dgw.sku_id,trunc(dgw.expiry_dstamp),dgw.client_id) dgw_inv
+    on sub.sku_id=dgw_inv.sku_id and trunc(sub.expiry_date)<=trunc(dgw_inv.expiry_date)
+where nvl(dgw_inv.dgw_qty_available,0)>0
+group by sub.sku_id,sub.rcl_qty_available,dgw_inv.dgw_qty_available
+)
+group by sku_id,rcl_qty_available,sub_qty_exp
+) tot
+)
+)
+where advise_order_qty>0
+)
+) total
+where not exists (select 1 from dcsdba.sku sku where total.sku_id=sku.sku_id and sku.client_id='BEA' and nvl(sku.hazmat_id,'N')='RHSUN3018')
+order by 9,16,18,10]]>
+	</queryString>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="BATCH_ID" class="java.lang.String"/>
+	<field name="EXPIRY_DATE" class="java.lang.String"/>
+	<field name="ADVISE_ORDER_QTY" class="java.math.BigDecimal"/>
+	<field name="TAG_ID" class="java.lang.String"/>
+	<field name="DEBITEUR" class="java.math.BigDecimal"/>
+	<field name="REFERENCE" class="java.lang.String"/>
+	<field name="NAME_CUSTOMER" class="java.lang.String"/>
+	<field name="STREET_NAME" class="java.lang.String"/>
+	<field name="ZIPCODE" class="java.lang.String"/>
+	<field name="PLACE" class="java.lang.String"/>
+	<field name="COUNTRY" class="java.lang.String"/>
+	<field name="WEIGHT" class="java.lang.String"/>
+	<field name="ORDERCODE" class="java.lang.String"/>
+	<field name="DELIVERY_DATE" class="java.lang.String"/>
+	<field name="TIME_FROM" class="java.lang.String"/>
+	<field name="TIME_TO" class="java.lang.String"/>
+	<field name="ORDERTEKST" class="java.lang.String"/>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="12" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="1100" y="0" width="90" height="12" uuid="62105ab1-117e-47f8-8af8-9e91ed43f362">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Min. Expiry Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="870" y="0" width="70" height="12" uuid="ddbb39af-1547-49ed-88be-7ca83c92a6ed">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[batch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="30" height="12" uuid="ff5cfdef-a1e3-42a7-8861-775ca526579f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TAG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="0" width="50" height="12" uuid="223b80b0-0f08-4b21-ab38-7d061089966c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="565" y="0" width="65" height="12" uuid="10401ca3-2c2c-4834-adde-e84e4e70cc8f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="0" width="60" height="12" uuid="088dc504-2af5-4e65-98da-8c9a63750896">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEBITEUR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="0" width="75" height="12" uuid="dad59eba-4d56-4010-abca-7c5dca81374e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REFERENCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="0" width="125" height="12" uuid="b6735308-0afd-49f4-85fe-e2b350cac092">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NAME CUSTOMER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="0" width="85" height="12" uuid="7fe82e64-0fc7-4751-b8a5-bdddd2b4c969">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STREETNAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="0" width="55" height="12" uuid="35834194-2c2a-418d-b318-cd1f34245994">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ZIPCODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="0" width="75" height="12" uuid="83e5d075-4661-4bb4-88f5-6f0c91c6b377">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLACE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="505" y="0" width="60" height="12" uuid="362688be-d8dd-45e4-babd-d2e20c1c9646">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COUNTRY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="40" height="12" uuid="5639cddf-2a64-4d96-bd4b-61d41c519df0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[weight]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="720" y="0" width="50" height="12" uuid="8014d047-17f9-432c-97be-081908b28525">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ordercode]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="770" y="0" width="50" height="12" uuid="50d85f86-e3f6-425b-9986-21bff20ea29f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="820" y="0" width="25" height="12" uuid="de04e186-8ed4-44cb-9a93-cb5cb5db088d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="845" y="0" width="25" height="12" uuid="fbcf1b1c-a4b9-4604-997b-5c80106de0a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="940" y="0" width="160" height="12" uuid="88fefdf9-5d9d-4b6a-b804-37d29923d587">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ordertekst]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1100" y="0" width="90" height="12" uuid="a663013e-f220-4bec-a8a1-f269e3d21211">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPIRY_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="30" height="12" uuid="cf356bd2-fcca-4a2f-b9a3-e8948ef88ad3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TAG_ID}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="870" y="0" width="70" height="12" uuid="fd766ad1-c511-4e0a-a30c-8ef5d9cc7e1e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BATCH_ID}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="630" y="0" width="50" height="12" uuid="0b50cd7c-6726-40fa-9cb7-c2fcff378eae">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADVISE_ORDER_QTY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="565" y="0" width="65" height="12" uuid="0fffa8b1-ab7d-420c-842e-bba078d9a01d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="30" y="0" width="60" height="12" uuid="5ec95e7a-5199-40fa-8596-add458e1a7ff">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEBITEUR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="90" y="0" width="75" height="12" uuid="3190dfb4-fadb-4590-a90b-30cca7aa0bc7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REFERENCE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="165" y="0" width="125" height="12" uuid="80a2ce25-ce12-47c1-8cf9-18b69b99084f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME_CUSTOMER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="290" y="0" width="85" height="12" uuid="c9d27ddc-4be7-4863-927f-fff1959bcd33">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STREET_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="375" y="0" width="55" height="12" uuid="12f16918-e949-4502-9ead-4238f6299ce6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ZIPCODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="430" y="0" width="75" height="12" uuid="1a6f7d6c-4bf0-4483-8c39-b3a15feb8487">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PLACE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="505" y="0" width="60" height="12" uuid="4562e28e-029c-4940-92d8-bfbf91b2a63e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="680" y="0" width="40" height="12" uuid="42e7d3a4-3d37-4a31-b706-4143461fa85b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WEIGHT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="720" y="0" width="50" height="12" uuid="c0821ce2-9fdc-4252-b9a4-e609b0dffe69">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDERCODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="770" y="0" width="50" height="12" uuid="75b5a863-7417-49f1-828e-a8fe24d3f9c6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DELIVERY_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="820" y="0" width="25" height="12" uuid="b959599d-2a16-4285-973c-aa5a864cbb2f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIME_FROM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="845" y="0" width="25" height="12" uuid="95c75856-5669-4722-ab21-4fe2a3d8b2fe">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIME_TO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="940" y="0" width="160" height="12" uuid="3bdcce9a-849e-46d9-a8e6-c22d7b395ab3">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDERTEKST}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

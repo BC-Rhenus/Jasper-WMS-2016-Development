@@ -1,0 +1,33 @@
+[Tue Nov 16 00:23:30 2021] Command Invocation: billingprocdae -A IROECOM -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/tstdba/reports/tpb/billingprocdae_IROECOM.log -L 3 -Z Europe/Amsterdam 
+[Tue Nov 16 00:23:30 2021] BC Transaction Processing daemon - Succesfully connected to server
+[Tue Nov 16 00:23:30 2021] day_of_week_specified 0
+[Tue Nov 16 00:23:30 2021] day_of_week 1
+[Tue Nov 16 00:23:30 2021] curr_day_of_week 2
+[Tue Nov 16 00:23:30 2021] current_time 1410
+[Tue Nov 16 00:23:30 2021] action_time 7200
+[Tue Nov 16 00:23:30 2021] current_date 44612
+[Tue Nov 16 00:23:30 2021] last_update 44612
+[Tue Nov 16 00:23:30 2021] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Tue Nov 16 00:23:30 2021] Process Transactions
+[Tue Nov 16 00:23:30 2021] ====================
+[Tue Nov 16 00:23:30 2021] Daemon Type         [ALL]
+[Tue Nov 16 00:23:30 2021] SLA Type            [PRICE]
+[Tue Nov 16 00:23:30 2021] Client              [IROECOM]
+[Tue Nov 16 00:23:30 2021] Blanket Contract    []
+[Tue Nov 16 00:23:30 2021] Contract            []
+[Tue Nov 16 00:23:30 2021] Term                []
+[Tue Nov 16 00:23:30 2021] Invoice Group       []
+[Tue Nov 16 00:23:30 2021] Rule                []
+[Tue Nov 16 00:23:30 2021] Use Scheduling      [Y]
+[Tue Nov 16 00:23:30 2021] Include Prior       [Y]
+[Tue Nov 16 00:23:30 2021] Include Processed   [N]
+[Tue Nov 16 00:23:30 2021] Include NoRuleFound [N]
+[Tue Nov 16 00:23:30 2021] MarkNORULEFOUNDOnFly[N]
+[Tue Nov 16 00:23:30 2021] MarkNORULEFOUNDOnly [N]
+[Tue Nov 16 00:23:30 2021] Commit Size         [1000]
+[Tue Nov 16 00:23:30 2021] Email Address       [tim.grol@nl.rhenus.com]
+[Tue Nov 16 00:23:30 2021] Email Level         [1]
+[Tue Nov 16 00:23:30 2021] Time Zone           [Europe/Amsterdam]
+[Tue Nov 16 00:23:52 2021] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Tue Nov 16 00:23:52 2021] BC Transaction Processing daemon - Disconnected from server
+

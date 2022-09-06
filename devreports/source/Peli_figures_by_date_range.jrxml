@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-03-15T16:26:11 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Peli_figures" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="838d3ebc-b42d-4ee7-9a39-a7c6f44db003">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<parameter name="from_date" class="java.lang.String"/>
+	<parameter name="to_date" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[with my_data as
+(
+select      to_char(itl.dstamp,'yyyy-mm-dd') as day
+,           decode(itl.code || itl.to_loc_id || loc.work_zone,'PickCONTAINERHAL3-LB','Pick from Floor'
+                                                            								 ,'PickCONTAINERHAL3-HB','Pick from Bulk'
+								                                                             ,decode(itl.code || itl.to_loc_id,'PickCONTAINER','Pick from Floor'
+                                								                             ,decode(itl.code || loc2.zone_1,'ReplenishHAL3-PFSH','Replenish to Shelf'
+                                                                                            ,'ReplenishHAL3-PFSL','Replenish to Shelf'
+                                                                                            ,'ReplenishHAL3-PFEUL','Replenish to boxpick'
+                                                                                            ,'ReplenishHAL3-PFBLL','Replenish to boxpick'
+                                                                                            ,'ReplenishHAL3-PFBLH','Replenish to boxpick'
+                                                                                            ,'ReplenishHAL3-PFEUH','Replenish to boxpick'
+                                                                                            ,decode(itl.Code || loc2.work_zone,'MarshalSHIPDOCK','Marshal to Shipdock'
+                                                                                                                              ,'MarshalSTAGE','Marshal to Stage or Repack'
+                                                                                                                              ,'MarshalSPECIALSTG','Marshal to Stage or Repack'
+                                                                                                                              ,'MarshalHAL3-REP','Marshal to Stage or Repack'
+                                                                                                                              ,decode(itl.code || decode(itl.rdt_user_mode,null,'WEB','RDT'),'RepackWEB','Repack via Web client'
+                                                                                                                                                                                            ,'RepackRDT','Repack via RDT'
+                                                                                                                                                                                            ,itl.code))))) as code
+,           itl.work_group
+,           decode(itl.rdt_user_mode,null,'WEB','RDT') modus
+,           itl.from_loc_id
+,           loc.work_zone
+,           loc.zone_1
+,           itl.to_loc_id
+,           loc2.work_zone
+,           loc2.zone_1
+,           itl.elapsed_time
+from        inventory_transaction itl
+,           location loc
+,           location loc2
+where       itl.code in ( 'Receipt'
+                    , 'Putaway'
+                    , 'Relocate'
+                    , 'Replenish'
+                    , 'Pick'
+                    , 'Container ChkI'
+                    , 'Container ChkS'
+                    , 'Repack'
+                    , 'Marshal'
+                    )
+and     to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') 
+and     to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY')
+and     loc.location_id = itl.from_loc_id
+and     loc2.location_id = itl.to_loc_id
+and		itl.code || elapsed_time <> 'Pick0'
+)
+select  day
+,       code
+,       count(*) as total
+,       sum(elapsed_time) as total_seconds
+from    my_data
+group by day, code
+union
+select  to_char(itl.dstamp,'yyyy-mm-dd') as day
+,       itl.code
+,       count(*) as total
+,       sum(itl.elapsed_time) as total_seconds
+from    inventory_transaction itl
+where   code = 'Vehicle Load'
+and     to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') >= to_date($P{from_date},'DD/MM/YYYY') 
+and     to_date(to_char(dstamp,'DDMMYYYY'),'DD/MM/YYYY') <= to_date($P{to_date},'DD/MM/YYYY')
+group by to_char(itl.dstamp,'yyyy-mm-dd'), itl.code
+order by day]]>
+	</queryString>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="TOTAL_SECONDS" class="java.math.BigDecimal"/>
+	<field name="DAY" class="java.lang.String"/>
+	<title>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30" uuid="34e61aa9-01ea-4732-88a1-a7dca8d2dc7c"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PELI figures for productivity measuments]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="0" width="130" height="21" uuid="e51f740b-4b55-4f37-bb31-6087b1188155"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Transaction Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="140" height="21" uuid="4620edb4-ec0d-44a3-a50f-391eef98a0ae"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Number of transactions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="130" height="21" uuid="7f4eb9ce-cca1-4f98-b3ea-5247cf8dc0b3"/>
+				<text><![CDATA[Total seconds spend]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="0" width="81" height="21" uuid="196a705d-50e2-41c8-9a1e-c93f58c1e259"/>
+				<text><![CDATA[Day]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="80" y="0" width="130" height="17" uuid="0c893902-2d47-41f7-a345-56facc765ab4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="140" height="17" uuid="a4ed23e8-013f-4914-8022-ed6ddc2a6d3b"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="130" height="17" uuid="d1cf7d78-2a15-4758-afab-178eb69191b5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_SECONDS}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="0" width="554" height="17" uuid="6f683ad4-9206-4033-b5bd-d5d28460e1e3"/>
+				<textField>
+					<reportElement x="0" y="0" width="80" height="17" uuid="8ca20141-6149-46c7-abd9-602236af667a"/>
+					<textFieldExpression><![CDATA[$F{DAY}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

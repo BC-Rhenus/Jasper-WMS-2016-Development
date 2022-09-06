@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2017-03-08T13:22:27 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="peli_pick_face_zones_per_SKU" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="305ee5b6-564a-4f44-b4be-9204559d9f59">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 PRD"/>
+	<queryString language="SQL">
+		<![CDATA[select    distinct i.sku_id
+,         (select p.zone_1 from pick_face p where p.sku_id = i.sku_id and p.tracking_level = 'BOX' and rownum = 1 and client_id = 'PELI') BOX_PICK_FACE_ZONE
+,         (select p.zone_1 from pick_face p where p.sku_id = i.sku_id and p.tracking_level = 'EACH' and rownum = 1 and client_id = 'PELI') EACH_PICK_FACE_ZONE
+,         (select s.ratio_1_to_2 from sku_config s where s.config_id = (select ss.config_id from sku_sku_config ss where ss.sku_id = i.sku_id and rownum = 1 and client_id = 'PELI') and client_id = 'PELI') EACH_PER_BOX
+from      inventory i
+where     client_id = 'PELI'
+and       sku_id not like '%SP'
+and       sku_id <> 'EUREPAIR'
+order by  BOX_PICK_FACE_ZONE desc, EACH_PICK_FACE_ZONE desc]]>
+	</queryString>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="BOX_PICK_FACE_ZONE" class="java.lang.String"/>
+	<field name="EACH_PICK_FACE_ZONE" class="java.lang.String"/>
+	<field name="EACH_PER_BOX" class="java.math.BigDecimal"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="26" width="554" height="30" uuid="907cc8c9-4bd3-4d28-8671-1205bdf65656"/>
+				<textElement textAlignment="Center">
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU's and pickfaces, qty per box for PELI]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="11" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="140" height="10" uuid="2d4f3359-e6a7-4779-b866-7119958f206b"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="0" width="100" height="10" uuid="4a71fe31-2c55-4492-a20c-34bbb015b63f"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BOX_PICK_FACE_ZONE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="100" height="10" uuid="e1aeb188-5019-4823-a0cc-103c54739592"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EACH_PICK_FACE_ZONE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="100" height="10" uuid="9f6f34d8-ad3d-4fb4-bf52-c636d7b619bc"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EACH_PER_BOX]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="140" height="10" uuid="d66a873d-638a-4b94-b6c6-fbc49f139013"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="100" height="10" uuid="937ed96f-9b89-4b01-85ec-5ea2029c3d33"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BOX_PICK_FACE_ZONE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="100" height="10" uuid="35c3a843-f696-4828-ae41-be36543be828"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EACH_PICK_FACE_ZONE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="100" height="10" uuid="ca52dd34-7119-4590-a1b5-a9dd1897c619"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EACH_PER_BOX}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

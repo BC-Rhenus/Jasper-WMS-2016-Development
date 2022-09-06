@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-12-22T16:41:16 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nlsbr01_lely_export_inventory" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3206a4f4-da9d-4bc1-8cfc-5b193a749568">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016 TST"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT distinct i.key
+, i.sku_id
+, i.qty_on_hand * nvl(s.each_quantity, 1) qty_on_hand
+, i.qty_allocated * nvl(s.each_quantity, 1) qty_allocated
+, i.condition_id
+, i.lock_status
+, i.lock_code
+, oh.order_id
+, oh.order_reference
+, oh.export
+, oh.status
+
+FROM DCSDBA.inventory i 
+inner join dcsdba.move_task mt on mt.container_id = i.container_id
+inner join dcsdba.order_header oh on oh.order_id = mt.task_id and mt.client_id = oh.client_id
+inner join dcsdba.sku s on mt.client_id = s.client_id and mt.sku_id =  s.sku_id
+
+where oh.status in ('Packed', 'Ready to Load', 'Complete')
+and i.client_id = 'LELY'
+and oh.export = 'Y'
+order by order_id]]>
+	</queryString>
+	<field name="KEY" class="java.math.BigDecimal"/>
+	<field name="SKU_ID" class="java.lang.String"/>
+	<field name="QTY_ON_HAND" class="java.math.BigDecimal"/>
+	<field name="QTY_ALLOCATED" class="java.math.BigDecimal"/>
+	<field name="CONDITION_ID" class="java.lang.String"/>
+	<field name="LOCK_STATUS" class="java.lang.String"/>
+	<field name="LOCK_CODE" class="java.lang.String"/>
+	<field name="ORDER_ID" class="java.lang.String"/>
+	<field name="ORDER_REFERENCE" class="java.lang.String"/>
+	<field name="EXPORT" class="java.lang.String"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<group name="KEY">
+		<groupExpression><![CDATA[$F{KEY}]]></groupExpression>
+	</group>
+	<group name="SKU_ID">
+		<groupExpression><![CDATA[$F{SKU_ID}]]></groupExpression>
+	</group>
+	<group name="QTY_ON_HAND">
+		<groupExpression><![CDATA[$F{QTY_ON_HAND}]]></groupExpression>
+	</group>
+	<group name="QTY_ALLOCATED">
+		<groupExpression><![CDATA[$F{QTY_ALLOCATED}]]></groupExpression>
+	</group>
+	<group name="CONDITION_ID">
+		<groupExpression><![CDATA[$F{CONDITION_ID}]]></groupExpression>
+	</group>
+	<group name="LOCK_STATUS">
+		<groupExpression><![CDATA[$F{LOCK_STATUS}]]></groupExpression>
+	</group>
+	<group name="LOCK_CODE">
+		<groupExpression><![CDATA[$F{LOCK_CODE}]]></groupExpression>
+	</group>
+	<group name="ORDER_ID">
+		<groupExpression><![CDATA[$F{ORDER_ID}]]></groupExpression>
+	</group>
+	<group name="ORDER_REFERENCE">
+		<groupExpression><![CDATA[$F{ORDER_REFERENCE}]]></groupExpression>
+	</group>
+	<group name="EXPORT">
+		<groupExpression><![CDATA[$F{EXPORT}]]></groupExpression>
+	</group>
+	<group name="STATUS">
+		<groupExpression><![CDATA[$F{STATUS}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="200" y="0" width="372" height="20" uuid="b6eb950b-f9f8-43c7-9652-d11743cc499d"/>
+				<text><![CDATA[Export Inventory not shipped in WMS but status Packed or Ready to Load]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="20" uuid="3b80ca65-246f-428a-b0b1-939427015008"/>
+				<text><![CDATA[KEY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="0" width="72" height="20" uuid="5f35fced-d2db-4cd4-a937-6e18cfd3e21f">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[SKU_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="72" height="20" uuid="4865c0f1-1efa-43dc-8b7f-292061dd2e98">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[QTY_ON_HAND]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="0" width="72" height="20" uuid="41f458e4-f87d-496e-b938-936a09895729"/>
+				<text><![CDATA[CONDITION_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="0" width="76" height="20" uuid="c071464d-2c6f-4dce-98c0-10686bae95f5"/>
+				<text><![CDATA[LOCK_STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="0" width="72" height="20" uuid="400e1918-2014-4388-8a41-671e647a904c"/>
+				<text><![CDATA[LOCK_CODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="506" y="0" width="72" height="20" uuid="97c80867-4fd5-43cb-8956-333563a8391f"/>
+				<text><![CDATA[ORDER_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="578" y="0" width="72" height="20" uuid="0901ee3b-c390-4282-87a8-d634406240ca"/>
+				<text><![CDATA[ORDER_REFERENCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="0" width="72" height="20" uuid="71ad38ca-de0e-4d03-b8ed-ff41d95c78ef"/>
+				<text><![CDATA[EXPORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="722" y="0" width="72" height="20" uuid="0c445ad5-075c-4834-917a-dca7147fadc7"/>
+				<text><![CDATA[STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="194" y="0" width="90" height="20" uuid="bcd91591-2320-4a35-ab2c-43e8599e270e">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[QTY_ALLOCATED]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="4" width="50" height="16" uuid="c82a9ddc-c244-4a30-bbd8-1ca16aa013b7"/>
+				<textFieldExpression><![CDATA[$F{KEY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="194" y="4" width="90" height="16" uuid="b35a0acf-c77a-488e-9c31-978e0d96cc1a"/>
+				<textFieldExpression><![CDATA[$F{QTY_ALLOCATED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="4" width="72" height="16" uuid="30ea7e95-25ed-41be-9244-4b9e954cca15"/>
+				<textFieldExpression><![CDATA[$F{SKU_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="4" width="72" height="16" uuid="00b16ea6-0932-4c40-b891-495c19154aa9"/>
+				<textFieldExpression><![CDATA[$F{QTY_ON_HAND}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="4" width="72" height="16" uuid="5f7da669-8e32-45b3-b5e5-415e3c098d3f"/>
+				<textFieldExpression><![CDATA[$F{CONDITION_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="722" y="4" width="72" height="16" uuid="41c30c37-e3e4-4624-bf1f-02c2976eeed6"/>
+				<textFieldExpression><![CDATA[$F{STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="578" y="4" width="72" height="16" uuid="427ff42d-7ab8-48a1-bbc4-5f63e6f9c469"/>
+				<textFieldExpression><![CDATA[$F{ORDER_REFERENCE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="4" width="72" height="16" uuid="914081ee-2f7f-4225-8db6-ff80e398a397"/>
+				<textFieldExpression><![CDATA[$F{LOCK_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="506" y="4" width="72" height="16" uuid="105d9677-707d-4a3c-ac03-1ce698c626bb"/>
+				<textFieldExpression><![CDATA[$F{ORDER_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="4" width="72" height="16" uuid="2ca45d3b-6da7-4a89-b5bf-bad9f6844943"/>
+				<textFieldExpression><![CDATA[$F{EXPORT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="4" width="76" height="16" uuid="bfa979eb-7e68-4823-8c0d-e65ad24bb074"/>
+				<textFieldExpression><![CDATA[$F{LOCK_STATUS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

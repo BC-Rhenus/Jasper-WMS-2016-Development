@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2022-06-27T10:21:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_nlsbr01_location_occupancy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Error" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.6500000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_PRD"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\tim.grol\\Desktop\\ireport\\MyReports"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select loc_cat,nvl(y,0) y,nvl(n,0) n from (
+select loc_cat,occupied,nvl(count(distinct location_id),0) nr_locs
+from (
+select distinct loc.location_id
+,(case when loc.subzone_1='14CLIN' then 'CLINICAL_BOND_AREA'
+when loc.zone_1 not like 'B%' and loc.subzone_2 like '%TUBE%' then 'TUBE_PICK'
+when loc.zone_1 like 'P%' and loc.subzone_1='14BC' then 'BROKENCASE_PICK'
+when (loc.zone_1 like 'S%' or loc.zone_1 like 'F%') and loc.subzone_1='14BC' then 'BROKENCASE_SHELF'
+when loc.zone_1 like 'B%' and loc.subzone_1='14BC' and loc.subzone_2 like '%EURO%' then 'BROKENCASE_BULK_EURO'
+when loc.zone_1 like 'B%' and loc.subzone_1='14BC' and loc.subzone_2 like '%DPAL%' then 'BROKENCASE_BULK_DPAL'
+when loc.zone_1 like 'B%' and loc.subzone_1='14BC' and loc.subzone_2 like '%BLOK%' then 'BROKENCASE_BULK_BLOK'
+when loc.zone_1 like 'B%' and loc.subzone_1='14BC' and loc.subzone_2 like '%OV%S%' then 'BROKENCASE_BULK_OVERSIZED'
+when loc.zone_1 like 'B%' and loc.subzone_1='14BC' then 'BROKENCASE_BULK'
+when loc.zone_1 like 'P%' and loc.subzone_1 like '%QUAR' then 'QUARANTINE_PICK'
+when (loc.zone_1 like 'S%' or loc.zone_1 like 'F%') and loc.subzone_1 like '%QUAR' then 'QUARANTINE_SHELF'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%QUAR' and loc.subzone_2 like '%EURO%' then 'QUARANTINE_BULK_EURO'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%QUAR' and loc.subzone_2 like '%DPAL%' then 'QUARANTINE_BULK_DPAL'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%QUAR' and loc.subzone_2 like '%BLOK%' then 'QUARANTINE_BULK_BLOK'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%QUAR' and loc.subzone_2 like '%OV%S%' then 'QUARANTINE_BULK_OVERSIZED'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%QUAR' then 'QUARANTINE_BULK'
+when loc.zone_1 like 'P%' and loc.subzone_1 like '%DG' then 'DG_PICK'
+when (loc.zone_1 like 'S%' or loc.zone_1 like 'F%') and loc.subzone_1 like '%DG' then 'DG_SHELF'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%DG' and loc.subzone_2 like '%EURO%' then 'DG_BULK_EURO'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%DG' and loc.subzone_2 like '%DPAL%' then 'DG_BULK_DPAL'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%DG' and loc.subzone_2 like '%BLOK%' then 'DG_BULK_BLOK'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%DG' and loc.subzone_2 like '%OV%S%' then 'DG_BULK_OVERSIZED'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%DG' then 'DG_BULK'
+when loc.zone_1 like 'P%' and loc.subzone_1 like '%OIL' then 'OIL_PICK'
+when (loc.zone_1 like 'S%' or loc.zone_1 like 'F%') and loc.subzone_1 like '%OIL' then 'OIL_SHELF'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%OIL' and loc.subzone_2 like '%EURO%' then 'OIL_BULK_EURO'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%OIL' and loc.subzone_2 like '%DPAL%' then 'OIL_BULK_DPAL'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%OIL' and loc.subzone_2 like '%BLOK%' then 'OIL_BULK_BLOK'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%OIL' and loc.subzone_2 like '%OV%S%' then 'OIL_BULK_OVERSIZED'
+when loc.zone_1 like 'B%' and loc.subzone_1 like '%OIL' then 'OIL_BULK'
+when loc.zone_1 like 'S%' and loc.subzone_2 like '%OV%S%' then 'SHELF_OVERSIZED'
+when (loc.zone_1 like 'S%' or loc.zone_1 like 'F%') then 'REGULAR_SHELF'
+when loc.zone_1 like 'P%' and loc.subzone_2 like '%OV%S%' then 'PICK_OVERSIZED'
+when loc.zone_1 like 'P%' then 'REGULAR_PICK'
+when loc.zone_1 like 'B%' and loc.subzone_2 like '%EURO%' then 'REGULAR_BULK_EURO'
+when loc.zone_1 like 'B%' and loc.subzone_2 like '%DPAL%' then 'REGULAR_BULK_DPAL'
+when loc.zone_1 like 'B%' and loc.subzone_2 like '%BLOK%' then 'REGULAR_BULK_BLOK'
+when loc.zone_1 like 'B%' and loc.subzone_2 like '%OV%S%' then 'REGULAR_BULK_OVERSIZED'
+when loc.zone_1 like 'B%' then 'REGULAR_BULK'
+else 'NA' end) loc_cat
+,(case when (inv.tag_id is not null or loc.lock_status<>'UnLocked') then 'Y' else 'N' end) occupied
+from dcsdba.location loc
+inner join dcsdba.client clt on loc.subzone_1 like (nvl(clt.user_def_type_5,'*')||'%')
+left join dcsdba.inventory inv on loc.location_id=inv.location_id and loc.site_id=inv.site_id
+where loc.site_id='NLSBR01'
+and clt.client_id=$P{client_id}
+) group by loc_cat,occupied
+)
+pivot (sum(nr_locs)
+for occupied in ('Y' y,'N' n)
+)
+order by 1]]>
+	</queryString>
+	<field name="LOC_CAT" class="java.lang.String"/>
+	<field name="Y" class="java.math.BigDecimal"/>
+	<field name="N" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="13" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="2" y="0" width="158" height="12" uuid="62105ab1-117e-47f8-8af8-9e91ed43f362">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LOCATION CATEGORY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="242" y="0" width="68" height="12" uuid="ddbb39af-1547-49ed-88be-7ca83c92a6ed">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FREE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="0" width="69" height="12" uuid="ff5cfdef-a1e3-42a7-8861-775ca526579f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OCCUPIED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="0" width="78" height="12" uuid="f58cb1c1-39cb-4b01-8813-7fb0362d8e83">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FILL RATE]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="12" width="403" height="1" uuid="9e8c49c3-d4c5-4759-bffb-f1b2735a0a5d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#7D7D7D"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="322" y="0" width="1" height="12" uuid="6a06563e-5887-4e82-a946-1e25f5f012c0">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="241" y="0" width="1" height="12" uuid="daf903a8-a15d-4503-a210-5149a5c8b97f">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="160" y="0" width="1" height="12" uuid="8fc9c7bb-e2d3-4260-a1f6-76b580a2eb7c">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" pattern="######0" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="242" y="0" width="68" height="12" uuid="a663013e-f220-4bec-a8a1-f269e3d21211">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{N}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2" y="0" width="158" height="12" uuid="cf356bd2-fcca-4a2f-b9a3-e8948ef88ad3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOC_CAT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="######0" isBlankWhenNull="true">
+				<reportElement x="161" y="0" width="69" height="12" uuid="fd766ad1-c511-4e0a-a30c-8ef5d9cc7e1e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Y}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="323" y="0" width="40" height="12" uuid="bdbc2d25-462c-448f-a4af-e88241e150b7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{Y}*100)/($F{N} + $F{Y}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="365" y="0" width="38" height="12" uuid="abca84d2-f9fd-4cde-b227-008f5d01c0ae">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA['%']]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="160" y="0" width="1" height="12" uuid="a0df3c6f-ddd6-44c7-849b-de7a5ec5c5b7">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="241" y="0" width="1" height="12" uuid="c03da7fc-9ec7-496d-b4ab-80ca3393f2e2">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="322" y="0" width="1" height="12" uuid="6d76e206-57c6-4a8f-99c8-fcefab25a711">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,33 @@
+[Wed Nov 27 03:16:02 2019] Command Invocation: billingprocdae -A FUNKO -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/devdba/reports/tpb/billingprocdae_FUNKO.log -L 3 -Z Europe/Amsterdam 
+[Wed Nov 27 03:16:02 2019] BC Transaction Processing daemon - Succesfully connected to server
+[Wed Nov 27 03:16:02 2019] day_of_week_specified 0
+[Wed Nov 27 03:16:02 2019] day_of_week 1
+[Wed Nov 27 03:16:02 2019] curr_day_of_week 3
+[Wed Nov 27 03:16:02 2019] current_time 11762
+[Wed Nov 27 03:16:02 2019] action_time 7200
+[Wed Nov 27 03:16:02 2019] current_date 43891
+[Wed Nov 27 03:16:02 2019] last_update 43891
+[Wed Nov 27 03:16:02 2019] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Wed Nov 27 03:16:02 2019] Process Transactions
+[Wed Nov 27 03:16:02 2019] ====================
+[Wed Nov 27 03:16:02 2019] Daemon Type         [ALL]
+[Wed Nov 27 03:16:02 2019] SLA Type            [PRICE]
+[Wed Nov 27 03:16:02 2019] Client              [FUNKO]
+[Wed Nov 27 03:16:02 2019] Blanket Contract    []
+[Wed Nov 27 03:16:02 2019] Contract            []
+[Wed Nov 27 03:16:02 2019] Term                []
+[Wed Nov 27 03:16:02 2019] Invoice Group       []
+[Wed Nov 27 03:16:02 2019] Rule                []
+[Wed Nov 27 03:16:02 2019] Use Scheduling      [Y]
+[Wed Nov 27 03:16:02 2019] Include Prior       [Y]
+[Wed Nov 27 03:16:02 2019] Include Processed   [N]
+[Wed Nov 27 03:16:02 2019] Include NoRuleFound [N]
+[Wed Nov 27 03:16:02 2019] MarkNORULEFOUNDOnFly[N]
+[Wed Nov 27 03:16:02 2019] MarkNORULEFOUNDOnly [N]
+[Wed Nov 27 03:16:02 2019] Commit Size         [1000]
+[Wed Nov 27 03:16:02 2019] Email Address       [tim.grol@nl.rhenus.com]
+[Wed Nov 27 03:16:02 2019] Email Level         [1]
+[Wed Nov 27 03:16:02 2019] Time Zone           [Europe/Amsterdam]
+[Wed Nov 27 04:06:45 2019] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Wed Nov 27 04:06:45 2019] BC Transaction Processing daemon - Disconnected from server
+

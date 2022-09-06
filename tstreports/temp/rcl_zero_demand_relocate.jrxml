@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-03-12T13:12:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rcl_zero_demand_relocate" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3d16f8c6-a270-408c-9fcf-a97dad20e9ae">
+	<property name="ireport.zoom" value="1.6500000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="170"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="824"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS2016_ACC"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="JR_TEMPLATE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\martijn.schijvenaars\\JaspersoftWorkspace\\WMS2016 - Reports"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="client_id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[/*
+adr.address_id='ZERODEMAND'
+adr.user_def_type_3=cleanup from zone
+* adr.user_def_type_4=count needed locations from zone
+adr.user_def_chk_1='Y'=zero demand
+adr.user_def_chk_2='Y'=zero allocation
+adr.user_def_num_3 = rownum
+*/
+select record_type||'|'||merge_action||'|'||to_loc_id||'|'||tag_id||'|'||sku_id||'|'||pallet_id||'|'||from_loc_id||'|'||client_id||'|'||site_id||'|'||quantity||'|'||move_if_allocated||'|'||move_task_status||'|'||find_location||'|'||disallow_tag_swap||'|'||time_zone_name||'|'||nls_calendar
+text
+from (
+select 'RLC' record_type,'A' merge_action
+,'' to_loc_id
+,tag_id tag_id,sku_id sku_id,'' pallet_id,location_id from_loc_id,client_id client_id,site_id site_id
+,qty_on_hand quantity,'N' move_if_allocated,'Released' move_task_status
+,'Y' find_location
+,'N' disallow_tag_swap,'' time_zone_name,'' nls_calendar
+from (select tag_id,sku_id,location_id,client_id,site_id,qty_on_hand,dstamp,rownum
+from (select inv.tag_id,inv.sku_id,inv.location_id,inv.client_id,inv.site_id,inv.qty_on_hand,itr.dstamp
+from dcsdba.inventory inv --inventory data
+inner join (select itr.tag_id,itr.sku_id,itr.client_id,itr.site_id,max(trunc(itr.dstamp)) dstamp from dcsdba.inventory_transaction itr group by itr.tag_id,itr.sku_id,itr.client_id,itr.site_id) itr on inv.tag_id=itr.tag_id and inv.sku_id=itr.sku_id and inv.client_id=itr.client_id and inv.site_id=itr.site_id
+inner join dcsdba.location loc on inv.location_id=loc.location_id and inv.site_id=loc.site_id --location data
+inner join dcsdba.address adr on inv.client_id=adr.client_id and adr.address_id='ZERODEMAND' --relocate parameters
+where adr.client_id=$P{client_id} --client_id
+and (nvl(adr.user_def_chk_1,'N')='Y' or nvl(adr.user_def_chk_2,'N')='Y') --trigger to generate relocates
+and loc.zone_1=adr.user_def_type_3 --from_zone
+and nvl(inv.qty_allocated,0)=0 --to excluded locations with allocation
+and nvl(inv.tag_id,'N') not in (select mvt.tag_id from dcsdba.move_task mvt where mvt.client_id=inv.client_id and mvt.from_loc_id=inv.location_id and mvt.sku_id=inv.sku_id and mvt.site_id=inv.site_id and mvt.task_type='M') --exclude existing relocates
+and inv.sku_id <> (case when nvl(adr.user_def_chk_1,'N')='Y'
+then nvl((select distinct odl.sku_id from dcsdba.order_header odh
+inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id
+where odh.status in ('Hold','Released') --only unallocated orders
+and nvl(odl.rule_id,'N')<>nvl(adr.user_def_type_8,'N') --exclude lines which won't be allocated from pick pallet locations
+and odl.sku_id=inv.sku_id --only lines for same sku as to clean up
+),'q')
+else 'q'--inv.sku_id
+end) --to exclude locations with sku's which are neede for orders
+order by itr.dstamp) reloc
+where rownum<=(nvl((select adr.user_def_num_3 from dcsdba.address adr where adr.client_id=reloc.client_id and adr.address_id='ZERODEMAND'), --if there is a number of relocates set (address.user_def_num_3) then use that number)
+    --otherwise count the number of locations needed by allocation
+    ((select count(distinct inv.location_id)
+    from dcsdba.inventory inv --inventory
+    inner join dcsdba.location loc on inv.location_id=loc.location_id and inv.site_id=loc.site_id --location data
+    inner join dcsdba.move_task mt1 on inv.tag_id=mt1.tag_id and inv.location_id=mt1.from_loc_id and inv.site_id=mt1.site_id and inv.client_id=mt1.client_id and inv.sku_id=mt1.sku_id --move tasks for inventory
+    inner join dcsdba.address adr on inv.client_id=adr.client_id and adr.address_id='ZERODEMAND' --relocate parameters
+    where inv.client_id=reloc.client_id --client_id
+    and loc.loc_type like 'Tag%' --only storage locations
+    and loc.zone_1=adr.user_def_type_4 --allocated locations zone
+    and nvl(inv.qty_allocated,0)>0 --must be allocation on inventory
+    having count(distinct mt1.key)>1) --allocated nr of locations to prevent bulk pick locations
+    -- + if requested also the number of locations that might be needed when all other orders will be allocated
+    + nvl((case when (select nvl(adr.user_def_chk_1,'N') from dcsdba.address adr where adr.client_id=reloc.client_id and adr.address_id='ZERODEMAND')='Y' --decide if the unallocated orders must be taken into calculation
+    then (select nr_locs from ( --total number of locations needed
+    (select ceil(qty_ordered/pallet_qty) nr_locs,client_id from --calculate nr of locs per client based on total quantity needed divided by the full pallet quantity and rounded up to whole number
+    (select sum(odl.qty_ordered) qty_ordered,odl.sku_id,odh.client_id
+    ,(case when pck.track_level_4='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4)
+    when pck.track_level_3='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3)
+    when pck.track_level_2='PALLET' then pck.ratio_1_to_2
+    else 1 end) pallet_qty --pallet qty calculation based on pack config
+    from dcsdba.order_header odh --order header
+    inner join dcsdba.order_line odl on odh.order_id=odl.order_id and odh.client_id=odl.client_id -- order line
+    inner join dcsdba.sku_sku_config lnk on odl.sku_id=lnk.sku_id and odl.client_id=lnk.client_id and nvl(lnk.disabled,'N')='N' and nvl(lnk.main_config_id,'N')=(case when exists (select 1 from dcsdba.sku_sku_config lnk2 where lnk2.sku_id=lnk.sku_id and lnk2.client_id=lnk.client_id and nvl(lnk2.disabled,'N')='N' and nvl(lnk2.main_config_id,'N')='Y') then 'Y' else 'N' end) and rownum=1 --pack config decision based on not disabled and main wehn available
+    inner join dcsdba.sku_config pck on lnk.config_id=pck.config_id and lnk.client_id=pck.client_id --pack config
+    inner join dcsdba.address adr on odh.client_id=adr.client_id and adr.address_id='ZERODEMAND' --relocate parameters
+    where odh.status in ('Hold','Released') --only unallocated orders
+    and nvl(odl.rule_id,'N')<>nvl(adr.user_def_type_8,'N') --exclude lines which won't be allocated from pick pallet locations
+    group by odl.sku_id,odh.client_id,(case when pck.track_level_4='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3*pck.ratio_3_to_4) when pck.track_level_3='PALLET' then (pck.ratio_1_to_2*pck.ratio_2_to_3) when pck.track_level_2='PALLET' then pck.ratio_1_to_2 else 1 end)
+    )))
+    where client_id=reloc.client_id --limit to current client
+    )
+    else 0 end),0)
+))
+)
+))]]>
+	</queryString>
+	<field name="TEXT" class="java.lang.String"/>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="2" splitType="Prevent">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="842" height="2" uuid="3e101b4c-9c2b-4506-b20a-8bf0e88c6a38">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TEXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band>
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+</jasperReport>

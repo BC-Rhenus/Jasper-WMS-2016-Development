@@ -1,0 +1,33 @@
+[Tue Sep  6 00:00:57 2022] Command Invocation: billingprocdae -A MLM -p -1 -f -e tim.grol@nl.rhenus.com -E1 -o /home/tstdba/reports/tpb/billingprocdae_MLM.log -L 3 -Z Europe/Amsterdam 
+[Tue Sep  6 00:00:57 2022] BC Transaction Processing daemon - Succesfully connected to server
+[Tue Sep  6 00:00:57 2022] day_of_week_specified 0
+[Tue Sep  6 00:00:57 2022] day_of_week 1
+[Tue Sep  6 00:00:57 2022] curr_day_of_week 2
+[Tue Sep  6 00:00:57 2022] current_time 57
+[Tue Sep  6 00:00:57 2022] action_time 7200
+[Tue Sep  6 00:00:57 2022] current_date 44906
+[Tue Sep  6 00:00:57 2022] last_update 44906
+[Tue Sep  6 00:00:57 2022] BC Transaction Processing daemon - Time Mode - Processing Started...
+[Tue Sep  6 00:00:57 2022] Process Transactions
+[Tue Sep  6 00:00:57 2022] ====================
+[Tue Sep  6 00:00:57 2022] Daemon Type         [ALL]
+[Tue Sep  6 00:00:57 2022] SLA Type            [PRICE]
+[Tue Sep  6 00:00:57 2022] Client              [MLM]
+[Tue Sep  6 00:00:57 2022] Blanket Contract    []
+[Tue Sep  6 00:00:57 2022] Contract            []
+[Tue Sep  6 00:00:57 2022] Term                []
+[Tue Sep  6 00:00:57 2022] Invoice Group       []
+[Tue Sep  6 00:00:57 2022] Rule                []
+[Tue Sep  6 00:00:57 2022] Use Scheduling      [Y]
+[Tue Sep  6 00:00:57 2022] Include Prior       [Y]
+[Tue Sep  6 00:00:57 2022] Include Processed   [N]
+[Tue Sep  6 00:00:57 2022] Include NoRuleFound [N]
+[Tue Sep  6 00:00:57 2022] MarkNORULEFOUNDOnFly[N]
+[Tue Sep  6 00:00:57 2022] MarkNORULEFOUNDOnly [N]
+[Tue Sep  6 00:00:57 2022] Commit Size         [1000]
+[Tue Sep  6 00:00:57 2022] Email Address       [tim.grol@nl.rhenus.com]
+[Tue Sep  6 00:00:57 2022] Email Level         [1]
+[Tue Sep  6 00:00:57 2022] Time Zone           [Europe/Amsterdam]
+[Tue Sep  6 00:00:57 2022] BC Transaction Processing daemon - Time Mode - Processing Finished...
+[Tue Sep  6 00:00:57 2022] BC Transaction Processing daemon - Disconnected from server
+
